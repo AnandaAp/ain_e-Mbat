@@ -1,0 +1,18 @@
+[versions]
+appcompat = "1.6.1"
+atomicfu = "0.21.0"
+compose-activity = "1.8.0"
+compose-version = "1.5.3"
+core-ktx = "1.12.0"
+
+[libraries]
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-version"  }
+
+[plugins]
+
+[bundles]
+

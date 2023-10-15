@@ -1,4 +1,4 @@
-package com.myapplication
+package com.ain.embat
 
 import MainView
 import android.os.Bundle

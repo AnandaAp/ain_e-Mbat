@@ -25,7 +25,7 @@ class BaseApplication: Application(), KoinComponent {
         initKoin()
         Firebase.initialize(this)
         Firebase.firestore.android.firestoreSettings = FirebaseFirestoreSettings.Builder(Firebase.firestore.android.firestoreSettings)
-            .setPersistenceEnabled(false)
+            .setPersistenceEnabled(true)
             .build()
     }
 }

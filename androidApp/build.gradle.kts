@@ -44,4 +44,44 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+
+    signingConfigs {
+        register("prod") {
+            storeFile = file(extra["KEY_STORE_FILE_PROD"] as String)
+            storePassword = extra["KEY_STORE_PASSWORD_PROD"] as String
+            keyAlias = extra["KEY_STORE_ALIAS_PROD"] as String
+            keyPassword = extra["KEY_STORE_PASSWORD_PROD"] as String
+        }
+        register("uat") {
+            storeFile = file(extra["KEY_STORE_FILE_UAT"] as String)
+            storePassword = extra["KEY_STORE_PASSWORD_UAT"] as String
+            keyAlias = extra["KEY_STORE_ALIAS_UAT"] as String
+            keyPassword = extra["KEY_STORE_PASSWORD_UAT"] as String
+        }
+    }
+
+    flavorDimensions.add("server")
+    productFlavors {
+        register("uat") {
+            applicationId = "com.ain.embat"
+            dimension = "server"
+        }
+        register("prod") {
+            applicationId = "com.ain.embat"
+            dimension = "server"
+            signingConfigs.getByName("prod")
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = true
+            isShrinkResources = true
+            proguardFiles (getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("uat")
+        }
+        debug {
+            this.isDebuggable = true
+        }
+    }
 }

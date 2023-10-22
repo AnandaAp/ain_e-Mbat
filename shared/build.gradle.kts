@@ -88,7 +88,6 @@ kotlin {
                 implementation("androidx.compose.ui:ui-test-junit4")
                 implementation("androidx.compose.ui:ui-tooling")
                 implementation("androidx.compose.ui:ui-test-manifest")
-
             }
         }
         val androidUnitTest by getting {
@@ -118,7 +117,7 @@ kotlin {
 
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
-    namespace = "com.myapplication.common"
+    namespace = "com.ain.embat"
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")

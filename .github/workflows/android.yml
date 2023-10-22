@@ -2,14 +2,14 @@ name: Android CI
 
 on:
   push:
-    branches: [ "integration", "*/Ngelaras" ]
+    branches: [ "integration", "ain/embat/release/*/integration" ]
   pull_request:
-    branches: [ "integration" ]
+    branches: [ "integration", "ain/embat/release/*/integration" ]
 
 jobs:
   build:
 
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3

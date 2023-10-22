@@ -4,8 +4,10 @@ import constants.AppConstant.SHADY_SUBSYSTEM
 import constants.CollectionsConstant
 import constants.FlagsConstant
 import constants.isNotNullOrEmpty
+import dev.gitlive.firebase.firestore.ChangeType
 import dev.gitlive.firebase.firestore.DocumentSnapshot
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
+import dev.gitlive.firebase.firestore.where
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -32,11 +34,28 @@ class SystemViewModel: BaseViewModel() {
         }
     }
 
-    private suspend fun <A> getOnboardingSystem(): Map<String, A> {
+    private suspend fun <A> getOnboardingSystem(callback: (A) -> Unit = {}): Map<String, A> {
         try {
             val response = firestore
                 .collectionGroup(CollectionsConstant.RETRIEVE_ONBOARDING_SYSTEM)
                 .get()
+            if (firestore.collectionGroup(CollectionsConstant.RETRIEVE_ONBOARDING_SYSTEM).where(field = FlagsConstant.IS_ONBOARDING_FULL, equalTo = true).get().isNotNullOrEmpty()) {
+                val t = firestore
+                    .collectionGroup(CollectionsConstant.RETRIEVE_ONBOARDING_SYSTEM)
+                    .where(field = FlagsConstant.IS_ONBOARDING_FULL, equalTo = true)
+                    .get()
+                for (change in t.documentChanges) {
+                    if (ChangeType.ADDED == change.type) {
+                        callback("IS_ONBOARDING_FULL: ${change.document.get<Boolean>(FlagsConstant.IS_ONBOARDING_FULL)}" as A)
+                    }
+
+                    if (t.metadata.isFromCache) {
+                        callback("Called From Local Cache" as A)
+                    } else {
+                        callback("Called From Server" as A)
+                    }
+                }
+            }
             return if (response.isNotNullOrEmpty() && response.documents.first().isRetrieveSystemValid(
                     FlagsConstant.IS_ONBOARDING_FULL,
                     FlagsConstant.IS_SYSTEM_ON_TESTING

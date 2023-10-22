@@ -58,6 +58,7 @@ kotlin {
                 implementation(libs.shared.firebase.common)
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.koin.core)
+                implementation(libs.kotlinx.datetime)
                 api(libs.kotlinx.coroutines.core)
                 api(libs.mvvm.core)
                 api(libs.mvvm.flow)

@@ -3,7 +3,6 @@ plugins {
     kotlin("plugin.serialization") version "1.9.0"
     id("com.android.library")
     id("org.jetbrains.compose")
-    id("com.google.gms.google-services")
     id("com.google.devtools.ksp")
 }
 
@@ -38,6 +37,7 @@ kotlin {
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
+            binaryOption("bundleId", "com.ain.embat")
         }
     }
 
@@ -61,7 +61,6 @@ kotlin {
                 api(libs.kotlinx.coroutines.core)
                 api(libs.mvvm.core)
                 api(libs.mvvm.flow)
-                api (libs.timber)
             }
         }
         val androidMain by getting {
@@ -79,6 +78,8 @@ kotlin {
                 api(libs.bundles.okhttp)
                 api(libs.bundles.coil)
                 api(libs.conscrypt.android)
+                api (libs.timber)
+                api(libs.android.fragment)
             }
         }
         val androidInstrumentedTest by getting {

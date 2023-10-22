@@ -11,6 +11,7 @@ conscrypt-android = "2.5.2"
 core-ktx = "1.12.0"
 espresso-core = "3.5.1"
 firebase-firestore-ktx = "24.8.1"
+fragment = "1.6.1"
 google-services = "4.4.0"
 gradle-osdetector = "1.4.0"
 junit = "4.13.2"
@@ -27,6 +28,7 @@ shared-firebase = "1.8.1"
 timber = "4.7.1"
 
 [libraries]
+android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }

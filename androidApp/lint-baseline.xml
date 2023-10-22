@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.1.2" type="baseline" client="gradle" dependencies="false" name="AGP (8.1.2)" variant="all" version="8.1.2">
+
+    <issue
+        id="LintError"
+        message="The lint detector&#xA;    `timber.lint.WrongTimberUsageDetector`&#xA;called `context.getMainProject()` during module analysis.&#xA;&#xA;This does not work correctly when running in AGP (8.1.2).&#xA;&#xA;In particular, there may be false positives or false negatives because&#xA;the lint check may be using the minSdkVersion or manifest information&#xA;from the library instead of any consuming app module.&#xA;&#xA;Contact the vendor of the lint issue to get it fixed/updated (if&#xA;known, listed below), and in the meantime you can try to work around&#xA;this by disabling the following issues:&#xA;&#xA;&quot;LogNotTimber&quot;,&quot;StringFormatInTimber&quot;,&quot;ThrowableNotAtBeginning&quot;,&quot;BinaryOperationInTimber&quot;,&quot;TimberArgCount&quot;,&quot;TimberArgTypes&quot;,&quot;TimberTagLength&quot;,&quot;TimberExceptionLogging&quot;&#xA;&#xA;Issue Vendors:&#xA;Identifier: timber-4.7.1&#xA;&#xA;Call stack: Context.getMainProject(Context.kt:102)←WrongTimberUsageDetector.visitMethod(WrongTimberUsageDetector.java:80)←Detector.visitMethodCall(Detector.kt:470)←UElementVisitor$DelegatingPsiVisitor.visitMethodCallExpression(UElementVisitor.kt:1082)←UElementVisitor$DelegatingPsiVisitor.visitCallExpression(UElementVisitor.kt:1062)←KotlinUFunctionCallExpression.accept(KotlinUFunctionCallExpression.kt:165)←UQualifiedReferenceExpression.accept(UQualifiedReferenceExpression.kt:34)←UQualifiedReferenceExpression.accept(UQualifiedReferenceExpression.kt:33)←ImplementationUtilsKt.acceptList(implementationUtils.kt:14)←UBlockExpression.accept(UBlockExpression.kt:21)←UMethod.accept(UMethod.kt:45)←ImplementationUtilsKt.acceptList(implementationUtils.kt:14)←AbstractKotlinUClass.accept(AbstractKotlinUClass.kt:99)←ImplementationUtilsKt.acceptList(implementationUtils.kt:14)←UFile.accept(UFile.kt:89)←UastLintUtilsKt.acceptSourceFile(UastLintUtils.kt:826)←UElementVisitor$visitFile$3.run(UElementVisitor.kt:267)←LintClient.runReadAction(LintClient.kt:1700)←LintDriver$LintClientWrapper.runReadAction(LintDriver.kt:2867)←UElementVisitor.visitFile(UElementVisitor.kt:264)">
+        <location
+            file="src/androidMain/kotlin/com/ain/embat/base/BaseActivity.kt"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Library lint checks out of date;&#xA;these checks **will be skipped**!&#xA;&#xA;Lint found an issue registry (`androidx.fragment.lint.FragmentIssueRegistry`)&#xA;which was compiled against an older version of lint&#xA;than this one. This is usually fine, but not in this&#xA;case; some basic verification shows that the lint&#xA;check jar references (for example) the following API&#xA;which is no longer valid in this version of lint:&#xA;org.jetbrains.uast.kotlin.KotlinUClass: org.jetbrains.kotlin.psi.KtClassOrObject getKtClass()&#xA;(Referenced from androidx/fragment/lint/OnCreateDialogIncorrectCallbackDetector$UastHandler.class)&#xA;&#xA;Therefore, this lint check library is **not** included&#xA;in analysis. This affects the following lint checks:&#xA;`FragmentTagUsage`&#xA;`FragmentAddMenuProvider`&#xA;`FragmentBackPressedCallback`&#xA;`FragmentLiveDataObserve`&#xA;`UseRequireInsteadOfGet`&#xA;`UseGetLayoutInflater`&#xA;`DialogFragmentCallbacksDetector`&#xA;`UnsafeRepeatOnLifecycleDetector`&#xA;`DetachAndAttachSameFragment`&#xA;&#xA;**This is a known bug which is already fixed in&#xA;`androidx.fragment:fragment:1.5.1` and later**; update&#xA;to that version. If you are not directly depending&#xA;on this library but picking it up via a transitive&#xA;dependency, explicitly add&#xA;`implementation &apos;androidx.fragment:fragment:1.5.1&apos;`&#xA;(or later) to your build.gradle dependency block.&#xA;&#xA;Version of Lint API this lint check is using is 11.&#xA;The Lint API version currently running is 14 (8.0+).">
+        <location
+            file="C:/Users/Ananda Utama/.gradle/caches/transforms-3/c0a1ad6f7500bdae7a344854c7c4f0e4/transformed/fragment-1.4.1/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose.material:material than 1.5.3 is available: 1.5.4"
+        errorLine1="compose-version = &quot;1.5.3&quot;"
+        errorLine2="                  ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="9"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.firebase:firebase-firestore-ktx than 24.8.1 is available: 24.9.0"
+        errorLine1="firebase-firestore-ktx = &quot;24.8.1&quot;"
+        errorLine2="                         ~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="13"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.room:room-compiler than 2.5.2 is available: 2.6.0"
+        errorLine1="room-compiler = &quot;2.5.2&quot;"
+        errorLine2="                ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="25"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.icon` appears to be unused">
+        <location
+            file="src/androidMain/res/drawable/icon.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ngelaras` appears to be unused">
+        <location
+            file="src/androidMain/res/drawable/ngelaras.png"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.rekaman` appears to be unused">
+        <location
+            file="src/androidMain/res/drawable/rekaman.png"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive icon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="MonochromeLauncherIcon"
+        message="The application adaptive roundIcon is missing a monochrome tag"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/icon.png` in densityless folder">
+        <location
+            file="src/androidMain/res/drawable/icon.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/ngelaras.png` in densityless folder">
+        <location
+            file="src/androidMain/res/drawable/ngelaras.png"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/rekaman.png` in densityless folder">
+        <location
+            file="src/androidMain/res/drawable/rekaman.png"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-hdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-mdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxhdpi/ic_launcher.webp"/>
+    </issue>
+
+    <issue
+        id="IconDuplicates"
+        message="The following unrelated icon files have identical contents: ic_launcher.webp, ic_launcher_round.webp">
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher_round.webp"/>
+        <location
+            file="src/main/res/mipmap-xxxhdpi/ic_launcher.webp"/>
+    </issue>
+
+</issues>

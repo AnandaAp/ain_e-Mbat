@@ -22,7 +22,9 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Clean build
+      run: ./gradlew clean
     - name: Run Gradle Lint
       run: ./gradlew updateLintBaseline
     - name: Build with Gradle
-      run: ./gradlew build
+      run: ./gradlew assembleUatRelease

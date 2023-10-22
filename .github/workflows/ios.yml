@@ -1,10 +1,10 @@
-name: iOS starter workflow
+name: iOS CI
 
 on:
   push:
-    branches: [ "integration", "ain/embat/release/*/integration" ]
+    branches: [ "" ]
   pull_request:
-    branches: [ "integration", "ain/embat/release/*/integration" ]
+    branches: [ "" ]
 
 jobs:
   build:
@@ -12,10 +12,26 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
+      - name: set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Clean build
+        run: ./gradlew clean
+      - name: Run Gradle Lint
+        run: ./gradlew updateLintBaseline
+      - name: Build with Gradle
+        run: ./gradlew assembleUatRelease
+
       - name: Set Default Scheme
         run: |
+          cd iosApp
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
           default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
           echo $default | cat >default
@@ -25,6 +41,7 @@ jobs:
           scheme: ${{ 'default' }}
           platform: ${{ 'iOS Simulator' }}
         run: |
+          cd iosApp
           # xcrun xctrace returns via stderr, not the expected stdout (see https://developer.apple.com/forums/thread/663959)
           device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
           if [ $scheme = default ]; then scheme=$(cat default); fi

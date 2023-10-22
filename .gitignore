@@ -14,3 +14,5 @@ androidApp/uat/*
 androidApp/debug/*
 androidApp/release/*
 androidApp/prod/*
+androidApp/lint-baseline.xml
+shared/lint-baseline.xml

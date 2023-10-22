@@ -1,0 +1,103 @@
+[versions]
+androidx-junit = "1.1.5"
+appcompat = "1.6.1"
+atomicfu = "0.21.0"
+coil = "2.4.0"
+compose-activity = "1.8.0"
+compose-material3 = "1.1.2"
+compose-ui-tooling = "1.5.3"
+compose-version = "1.5.3"
+conscrypt-android = "2.5.2"
+core-ktx = "1.12.0"
+espresso-core = "3.5.1"
+firebase-firestore-ktx = "24.8.1"
+google-services = "4.4.0"
+gradle-osdetector = "1.4.0"
+junit = "4.13.2"
+koin-core = "3.2.0"
+koin-test-junit4 = "3.0"
+kotlinx-coroutines-core = "1.7.3"
+kotlinx-serialization-json = "1.5.1"
+lifecycle-runtime-ktx = "2.6.2"
+mvvm-flow = "0.13.0"
+compose-navigation = "2.7.4"
+okhttp = "4.11.0"
+room-compiler = "2.5.2"
+shared-firebase = "1.8.1"
+timber = "4.7.1"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
+atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }
+coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
+coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
+compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
+compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-version"  }
+compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
+compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-ui-tooling" }
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-ui-tooling" }
+conscrypt-android = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt-android" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
+ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
+firebase-firestore-ktx = { module = "com.google.firebase:firebase-firestore-ktx", version.ref = "firebase-firestore-ktx" }
+google-services = { module = "com.google.gms:google-services", version.ref = "google-services" }
+junit = { module = "junit:junit", version.ref = "junit" }
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-core" }
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-core" }
+koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin-test-junit4" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
+lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
+lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
+mvvm-core = { module = "dev.icerock.moko:mvvm-core", version.ref = "mvvm-flow" }
+mvvm-flow = { module = "dev.icerock.moko:mvvm-flow", version.ref = "mvvm-flow" }
+mvvm-flow-compose = { module = "dev.icerock.moko:mvvm-flow-compose", version.ref = "mvvm-flow" }
+compose-navigation = { module = "androidx.navigation:navigation-compose", version.ref = "compose-navigation" }
+room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-compiler" }
+shared-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "shared-firebase"}
+shared-firebase-common = { group = "dev.gitlive", name = "firebase-common", version.ref = "shared-firebase"}
+firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version = "20.4.2" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.6.2" }
+timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
+
+okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
+
+[plugins]
+google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
+osdetector = { id = "com.google.gradle.osdetector-gradle-plugin", version.ref = "gradle-osdetector" }
+
+[bundles]
+android-compose = [
+    "compose-activity",
+    "compose-material",
+    "compose-material3",
+    "compose-ui-tooling",
+    "compose-ui-tooling-preview",
+    "compose-navigation"
+]
+
+android-lifecycle = [
+    "appcompat",
+    "lifecycle-runtime-ktx",
+    "core-ktx"
+]
+
+android-test = [
+    "junit",
+    "ext-junit",
+    "espresso-core"
+]
+
+okhttp = [
+    "okhttp-core",
+    "okhttp-logging-interceptor"
+]
+
+coil = [
+    "coil-core",
+    "coil-compose"
+]

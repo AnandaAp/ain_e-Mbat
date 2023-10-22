@@ -2,9 +2,9 @@ name: iOS starter workflow
 
 on:
   push:
-    branches: [ "integration", "ain/embat/release/*/integration" ]
+    branches: [ "integration" ]
   pull_request:
-    branches: [ "integration", "ain/embat/release/*/integration" ]
+    branches: [ "integration" ]
 
 jobs:
   build:

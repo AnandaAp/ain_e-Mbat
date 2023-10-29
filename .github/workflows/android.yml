@@ -5,6 +5,8 @@ on:
     branches: [ "integration", "ain/embat/release/*/integration" ]
   pull_request:
     branches: [ "integration", "ain/embat/release/*/integration" ]
+  schedule:
+    - cron: '45 2 * * 2'
 
 jobs:
   build:

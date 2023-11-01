@@ -124,6 +124,10 @@ android {
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/main/res")
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     defaultConfig {
         minSdk = (findProperty("android.minSdk") as String).toInt()
     }

@@ -9,7 +9,7 @@ plugins {
 kotlin {
     androidTarget()
     sourceSets {
-        val androidMain by getting {
+        androidMain {
             dependencies {
                 implementation(project(":shared"))
             }
@@ -81,7 +81,8 @@ android {
             signingConfig = signingConfigs.getByName("uat")
         }
         debug {
-            this.isDebuggable = true
+            isDebuggable = true
+            proguardFiles (getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
         }
     }
 }

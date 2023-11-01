@@ -3,7 +3,6 @@ package viewmodel
 import constants.AppConstant.SHADY_SUBSYSTEM
 import constants.CollectionsConstant
 import constants.FlagsConstant
-import constants.isNotNullOrEmpty
 import dev.gitlive.firebase.firestore.ChangeType
 import dev.gitlive.firebase.firestore.DocumentSnapshot
 import dev.gitlive.firebase.firestore.FirebaseFirestoreException
@@ -13,6 +12,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import util.isNotNullOrEmpty
 
 class SystemViewModel: BaseViewModel() {
     private val systemOnboardingStateFlow = MutableStateFlow(mapOf<String, Any>())

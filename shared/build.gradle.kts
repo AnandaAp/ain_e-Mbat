@@ -1,23 +1,25 @@
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization")
+    alias(libs.plugins.ksp)
     id("com.android.library")
     id("org.jetbrains.compose")
-    id("com.google.devtools.ksp")
 }
 
 kotlin {
+    jvm()
     androidTarget()
+    applyDefaultHierarchyTemplate()
 
 //    val hostOs = System.getProperty("os.name")
 //    val isArm64 = System.getProperty("os.arch") == "aarch64"
 //    val isMingwX64 = hostOs.startsWith("Windows")
 //    val nativeTarget = when {
-//        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-//        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
-//        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-//        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-//        isMingwX64 -> mingwX64("native")
+//        hostOs == "Mac OS X" && isArm64 -> macosArm64()
+//        hostOs == "Mac OS X" && !isArm64 -> macosX64()
+//        hostOs == "Linux" && isArm64 -> linuxArm64()
+//        hostOs == "Linux" && !isArm64 -> linuxX64()
+//        isMingwX64 -> mingwX64()
 //        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
 //    }
 //
@@ -29,8 +31,21 @@ kotlin {
 //        }
 //    }
 
+//    listOf(
+//        mingwX64(),
+//        macosArm64(),
+//        macosX64(),
+//        linuxArm64(),
+//        linuxX64()
+//    ).forEach {
+//        it.binaries {
+//            executable {
+//                entryPoint = "main"
+//            }
+//        }
+//    }
+
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -40,11 +55,23 @@ kotlin {
             binaryOption("bundleId", "com.ain.embat")
         }
     }
-
     sourceSets {
-        val commonMain by getting {
+        all {
+            languageSettings {
+                languageVersion = "2.0"
+            }
+        }
+        commonMain.configure {
             dependencies {
                 implementation(compose.runtime)
+                implementation(libs.atomicfu)
+                implementation(libs.koin.core)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.mvvm.core)
+                implementation(libs.mvvm.flow)
+                implementation(libs.kotlinx.serialization.json)
+
                 implementation(compose.foundation)
                 implementation(compose.material3)
                 implementation(compose.ui)
@@ -53,18 +80,19 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
-                implementation(libs.atomicfu)
-                implementation(libs.shared.firebase.firestore)
-                implementation(libs.shared.firebase.common)
-                implementation(libs.kotlinx.serialization.json)
-                implementation(libs.koin.core)
-                implementation(libs.kotlinx.datetime)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.mvvm.core)
-                api(libs.mvvm.flow)
             }
         }
-        val androidMain by getting {
+
+        val mobileMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(libs.shared.firebase.firestore)
+                implementation(libs.shared.firebase.common)
+            }
+        }
+
+        androidMain {
+            dependsOn(mobileMain)
             dependencies {
                 api(libs.bundles.android.compose)
                 api(libs.bundles.android.lifecycle)
@@ -79,40 +107,38 @@ kotlin {
                 api(libs.bundles.okhttp)
                 api(libs.bundles.coil)
                 api(libs.conscrypt.android)
-                api (libs.timber)
+                api(libs.timber)
                 api(libs.android.fragment)
             }
         }
+
+        iosMain {
+            dependsOn(mobileMain)
+        }
+
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-                implementation("androidx.compose.ui:ui-test-junit4")
-                implementation("androidx.compose.ui:ui-tooling")
-                implementation("androidx.compose.ui:ui-test-manifest")
+                implementation(project.dependencies.platform(libs.compose.bom))
+                implementation(libs.bundles.compose.test)
             }
         }
+
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.bundles.android.test)
                 implementation(libs.okhttp.mockwebserver)
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
-        }
 
-//        val nativeMain by getting {
-//            dependencies {
-//                api(compose.desktop.currentOs)
-//            }
-//        }
-//        val nativeTest by getting
+        val jvmAndNative by creating {
+            dependsOn(commonMain.get())
+        }
+        jvmMain {
+            dependsOn(jvmAndNative)
+        }
+        nativeMain {
+            dependsOn(jvmAndNative)
+        }
     }
 }
 

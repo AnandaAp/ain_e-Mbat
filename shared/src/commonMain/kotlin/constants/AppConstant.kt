@@ -1,7 +1,5 @@
 package constants
 
-import dev.gitlive.firebase.firestore.QuerySnapshot
-
 object AppConstant {
     const val PRODUCT = "Product"
     const val SHADY = "Shady"
@@ -67,7 +65,3 @@ object SplashScreen {
 fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
         && this.isNotEmpty()
         && this != Characters.EMPTY
-
-fun QuerySnapshot.isNotNullOrEmpty() = this != null
-        && this.documents != null
-        && this.documents.isNotEmpty()

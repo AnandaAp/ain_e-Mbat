@@ -9,7 +9,7 @@ import com.google.firebase.firestore.ktx.persistentCacheSettings
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.initialize
-import di.initKoin
+import di.initMobileKoin
 import org.conscrypt.Conscrypt
 import org.koin.core.component.KoinComponent
 import timber.log.Timber
@@ -20,16 +20,16 @@ import java.security.Security
 class BaseApplication: Application(), KoinComponent, LocalCacheSettings {
     private lateinit var appContext: Context
 
+    @Deprecated("#firestoreSettings function is deprecated")
     override fun onCreate() {
         super.onCreate()
         appContext = applicationContext
         Security.insertProviderAt(Conscrypt.newProvider(), 1)
         Timber.plant(DebugTree())
-        initKoin()
+        initMobileKoin()
         val settings = firestoreSettings {
             // Use memory cache
             setLocalCacheSettings(memoryCacheSettings {})
-            // Use persistent disk cache (default)
             setLocalCacheSettings(persistentCacheSettings {})
         }
         Firebase.initialize(this)

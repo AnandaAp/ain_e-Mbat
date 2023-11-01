@@ -5,7 +5,6 @@ import constants.AppConstant.BOTTOM_NAV_LIST
 import constants.BottomNavigation
 import constants.ExceptionConstant
 import constants.ProductConstant
-import constants.isNotNullOrEmpty
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.FirebaseException
 import dev.gitlive.firebase.firestore.firestore
@@ -16,6 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import models.Product
+import util.isNotNullOrEmpty
 
 class ProductViewModel : BaseViewModel() {
     private val productMutableStateFlow = MutableStateFlow(Product())

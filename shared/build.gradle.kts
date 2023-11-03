@@ -11,40 +11,6 @@ kotlin {
     androidTarget()
     applyDefaultHierarchyTemplate()
 
-//    val hostOs = System.getProperty("os.name")
-//    val isArm64 = System.getProperty("os.arch") == "aarch64"
-//    val isMingwX64 = hostOs.startsWith("Windows")
-//    val nativeTarget = when {
-//        hostOs == "Mac OS X" && isArm64 -> macosArm64()
-//        hostOs == "Mac OS X" && !isArm64 -> macosX64()
-//        hostOs == "Linux" && isArm64 -> linuxArm64()
-//        hostOs == "Linux" && !isArm64 -> linuxX64()
-//        isMingwX64 -> mingwX64()
-//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-//    }
-//
-//    nativeTarget.apply {
-//        binaries {
-//            executable {
-//                entryPoint = "main"
-//            }
-//        }
-//    }
-
-//    listOf(
-//        mingwX64(),
-//        macosArm64(),
-//        macosX64(),
-//        linuxArm64(),
-//        linuxX64()
-//    ).forEach {
-//        it.binaries {
-//            executable {
-//                entryPoint = "main"
-//            }
-//        }
-//    }
-
     listOf(
         iosArm64(),
         iosSimulatorArm64()
@@ -132,12 +98,24 @@ kotlin {
 
         val jvmAndNative by creating {
             dependsOn(commonMain.get())
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
         }
         jvmMain {
             dependsOn(jvmAndNative)
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
         }
         nativeMain {
             dependsOn(jvmAndNative)
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
         }
     }
 }

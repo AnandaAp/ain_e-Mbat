@@ -30,6 +30,7 @@ okhttp = "4.11.0"
 room-compiler = "2.6.0"
 shared-firebase = "1.8.1"
 timber = "4.7.1"
+skiko-awt-runtime-windows-x64 = "0.7.85"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
@@ -77,6 +78,8 @@ okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver",
 compose-test-ui-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
 compose-test-ui-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
 compose-test-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
+
+skiko-awt-runtime-windows-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-windows-x64", version.ref = "skiko-awt-runtime-windows-x64" }
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

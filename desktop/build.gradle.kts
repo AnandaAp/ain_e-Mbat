@@ -17,6 +17,7 @@ kotlin {
             dependencies {
                 implementation(project(":shared"))
                 implementation(compose.desktop.currentOs)
+                implementation(compose.material3)
                 implementation(libs.skiko.awt.runtime.windows.x64)
             }
         }

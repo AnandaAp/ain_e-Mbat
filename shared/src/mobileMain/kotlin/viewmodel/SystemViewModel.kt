@@ -34,6 +34,7 @@ class SystemViewModel: BaseViewModel() {
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private suspend fun <A> getOnboardingSystem(callback: (A) -> Unit = {}): Map<String, A> {
         try {
             val response = firestore

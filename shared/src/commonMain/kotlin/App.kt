@@ -10,7 +10,7 @@ import di.RuntimeCache
 import ui.splash.AinMbatBottomNavigation
 
 @Composable
-fun App(cache: RuntimeCache = RuntimeCache()) {
+fun App(cache: RuntimeCache = RuntimeCache) {
     MaterialTheme {
         val screens =
             if (cache.getList<String>(SHADY).isNotEmpty()) cache.getList(SHADY)

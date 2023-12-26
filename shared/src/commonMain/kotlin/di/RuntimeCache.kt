@@ -7,17 +7,19 @@ import constants.ExceptionConstant.DATA_NOT_FOUND
 import constants.RuntimeCacheConstant.FALSE
 import constants.RuntimeCacheConstant.TRUE
 
-class RuntimeCache {
+@Suppress("UNCHECKED_CAST")
+object RuntimeCache {
     private val cache: Map<String, Any> = hashMapOf(CACHE_KEY to mutableMapOf<String, Any>())
 
     private val runtimeCache: MutableMap<String, Any> =  cache[CACHE_KEY] as MutableMap<String, Any>
 
     init {
-        put(CACHE_KEY_INIT_KEY, CACHE_KEY_INIT)
+        if (getString(CACHE_KEY_INIT_KEY) != DATA_NOT_FOUND) {
+            put(CACHE_KEY_INIT_KEY, CACHE_KEY_INIT)
+        }
     }
 
-    private fun String.isKeyNotEmpty(): Boolean = this.isNotBlank()
-            && this.isNotEmpty()
+    private fun String.isKeyNotEmpty(): Boolean = this.isNotBlank() && this.isNotEmpty()
 
     private fun String.isFoundInCache(): Boolean = this.isKeyNotEmpty()
             && runtimeCache.containsKey(this)

@@ -56,7 +56,7 @@ import ui.custom.BaseGradient
 @Composable
 fun AinMbatBottomNavigation(
     screens: List<String> = listOf(),
-    cache: RuntimeCache = RuntimeCache()
+    cache: RuntimeCache = RuntimeCache
 ) {
     val bottomNavItems = remember { mutableStateOf(listOf<BottomNavigationItem>()) }
     var selectedScreen by remember { mutableStateOf(screens.first()) }

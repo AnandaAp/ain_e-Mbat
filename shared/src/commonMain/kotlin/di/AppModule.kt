@@ -8,7 +8,7 @@ import kotlinx.coroutines.plus
 import org.koin.dsl.module
 
 fun appModule() = module {
-    single { RuntimeCache() }
+    single { RuntimeCache }
     factory {
         val handler = CoroutineExceptionHandler { _, exception ->
             println("CoroutineExceptionHandler got $exception")

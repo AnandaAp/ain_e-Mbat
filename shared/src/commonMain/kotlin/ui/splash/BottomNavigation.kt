@@ -51,6 +51,7 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import states.Screens
 import ui.custom.BaseGradient
+import ui.ngelaras.BaseNgelaras
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -143,15 +144,19 @@ fun Content(
     selectedScreen: String
 ) {
     AnimatedContent(selectedScreen) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Selected Screen: $selectedScreen")
-        }
+//        Column(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .padding(padding),
+//            verticalArrangement = Arrangement.Center,
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Text(text = "Selected Screen: $selectedScreen")
+//        }
+        BaseNgelaras(
+            padding = padding,
+            selectedScreen = selectedScreen
+        )
     }
 }
 

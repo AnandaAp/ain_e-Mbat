@@ -18,8 +18,8 @@ fun NgelarasLazyColumn(padding: PaddingValues, item: List<Gamelan>) {
         modifier = Modifier
             .fillMaxSize()
             .padding(padding),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        verticalArrangement = Arrangement.Top,
+        horizontalAlignment = Alignment.Start
     ) {
         items(items = item) {
             AinCard(title = if (it.isNotNullOrEmpty()) it.name else AppConstant.DEFAULT_STRING_VALUE)

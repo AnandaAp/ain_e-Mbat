@@ -11,7 +11,7 @@ import kotlinx.serialization.Serializable
  *  Model class for Gamelan object. This class contain the name of the Gamelan.
  */
 data class Gamelan(
-    var name: String
+    var name: String =  AppConstant.DEFAULT_STRING_VALUE
 ) {
     override fun toString() = "Gamelan {\n" +
             "\tname: $name\n" +

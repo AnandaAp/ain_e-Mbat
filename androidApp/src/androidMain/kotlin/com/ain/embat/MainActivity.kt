@@ -23,12 +23,14 @@ import models.Product
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import ui.splash.SplashScreen
+import viewmodel.NgelarasViewModel
 import viewmodel.ProductViewModel
 import viewmodel.SystemViewModel
 
 class MainActivity : BaseActivity() {
     private val productViewModel: ProductViewModel by viewModel()
     private val systemViewModel: SystemViewModel  by viewModel()
+    private val ngelarasViewModel: NgelarasViewModel by viewModel()
     private lateinit var _product: Product
     private lateinit var _bottomNavItems: List<String>
     private lateinit var eligibility: String
@@ -54,6 +56,7 @@ class MainActivity : BaseActivity() {
         LaunchedEffect(key1 = this) {
             productViewModel.fetch()
             systemViewModel.fetch()
+            ngelarasViewModel.fetch()
         }
         LaunchedEffect(key1 = system) {
             val map: Any = runtimeCache.get(AppConstant.SHADY_SUBSYSTEM) ?: mapOf<String, Any>()
@@ -93,13 +96,14 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun RenderView() {
+
         Crossfade(
             targetState = _product.type,
             label = TAG!!
         ) { productType ->
             when (productType) {
-                AppConstant.Type.ANDROID_ONLY -> MainView(runtimeCache)
-                AppConstant.Type.FULL_TYPE -> MainView(runtimeCache)
+                AppConstant.Type.ANDROID_ONLY -> MainView(runtimeCache, ngelarasViewModel)
+                AppConstant.Type.FULL_TYPE -> MainView(runtimeCache, ngelarasViewModel)
                 AppConstant.Type.IOS_ONLY -> SplashScreen()
                 else -> SplashScreen()
             }

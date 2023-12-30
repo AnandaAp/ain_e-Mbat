@@ -49,6 +49,8 @@ kotlin {
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
                 implementation(libs.kotlinx.serialization.json)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.kotlinx.logging.jvm)
             }
         }
 
@@ -82,6 +84,9 @@ kotlin {
         }
 
         iosMain {
+            configurations.all {
+                exclude(group = "io.github.oshai", module = "kotlin-logging-jvm")
+            }
             dependsOn(mobileMain)
         }
 

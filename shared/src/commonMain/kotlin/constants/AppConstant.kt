@@ -17,6 +17,7 @@ object AppConstant {
     const val BOTTOM_NAV_LIST = "Bottom_Nav_List"
     const val DEFAULT_STRING_VALUE = ""
     const val DEFAULT_GAMELAN_VALUE = "Gamelan Doe"
+    const val NAME = "name"
     object Type {
         const val ANDROID_ONLY = "ANDROID_ONLY"
         const val IOS_ONLY = "IOS_ONLY"
@@ -26,6 +27,7 @@ object AppConstant {
 
 object RuntimeCacheConstant {
     const val APP_PRODUCT = "Application product"
+    const val GAMELAN_KEY = "Gamel@n R3trieven From F1re5t0r3"
     const val TRUE = "true"
     const val FALSE = "false"
 }
@@ -68,7 +70,7 @@ object SplashScreen {
     const val AUTHOR = "Muhamad Ainun Zibran"
 }
 
-fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
+inline fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
         && this.isNotEmpty()
         && this != Characters.EMPTY
 

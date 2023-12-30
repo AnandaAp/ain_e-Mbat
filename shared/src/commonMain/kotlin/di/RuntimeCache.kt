@@ -27,12 +27,14 @@ object RuntimeCache {
     private fun String.isBoolean(): Boolean = TRUE.equals(this, ignoreCase = true)
             || FALSE.equals(this, ignoreCase = true)
 
-    fun <T> put(key: String, value: T) {
-        value?.let {
-            if (key.isKeyNotEmpty()) {
-                runtimeCache[key] = it
-            }
+    fun <T : Any> put(key: String, value: T): Boolean {
+        if (key.isFoundInCache()) {
+            remove(key)
         }
+        if (key.isKeyNotEmpty() && value != null) {
+            runtimeCache[key] = value
+        }
+        return key.isFoundInCache()
     }
 
     fun getString(key: String): String =
@@ -56,10 +58,11 @@ object RuntimeCache {
             false
         }
 
-    fun remove(key: String) {
+    fun remove(key: String): Boolean {
         if (key.isFoundInCache()) {
             runtimeCache.remove(key)
         }
+        return !key.isFoundInCache()
     }
 
     fun clear() = runtimeCache.clear()

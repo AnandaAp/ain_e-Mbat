@@ -5,6 +5,7 @@ import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 import viewmodel.BaseViewModel
+import viewmodel.NgelarasViewModel
 import viewmodel.ProductViewModel
 import viewmodel.SystemViewModel
 fun mobileModule() = module {
@@ -13,6 +14,7 @@ fun mobileModule() = module {
     factory { SystemViewModel() }
     factory { ProductViewModel() }
     factory { BaseViewModel() }
+    factory { NgelarasViewModel() }
 }
 
 fun initMobileKoin(

@@ -21,7 +21,13 @@ import constants.DefaultPadding
 import models.Gamelan
 
 @Composable
-fun NgelarasLazyColumn(padding: PaddingValues, item: List<Gamelan>) {
+fun NgelarasLazyColumn(
+    padding: PaddingValues,
+    item: List<Gamelan>,
+    selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE,
+    selectedItem: (Gamelan) -> Unit = { Gamelan() },
+    cardOnClick: (Gamelan) -> Unit = { selectedItem(it) }
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -36,15 +42,20 @@ fun NgelarasLazyColumn(padding: PaddingValues, item: List<Gamelan>) {
             fontSize = MaterialTheme.typography.headlineMedium.fontSize
         )
         LazyVerticalGrid(
-            modifier = Modifier
-                .wrapContentSize(),
+            modifier = Modifier.wrapContentSize(),
             columns = GridCells.Adaptive(minSize = DefaultPadding.DEFAULT_GRID_MIN_SIZE),
             verticalArrangement = Arrangement.spacedBy(DefaultPadding.DEFAULT_CONTENT_VERTICAL_PADDING),
             horizontalArrangement = Arrangement.spacedBy(DefaultPadding.DEFAULT_CONTENT_HORIZONTAL_PADDING),
             contentPadding = PaddingValues(all = DefaultPadding.DEFAULT_CONTENT_PADDING_ALL)
         ) {
-            items(items = item) {
-                AinCard(title = if (it.isNotNullOrEmpty()) it.name else AppConstant.DEFAULT_STRING_VALUE)
+            items(items = item) { gamelan ->
+                AinCard(
+                    title = if (gamelan.isNotNullOrEmpty()) gamelan.name else AppConstant.DEFAULT_STRING_VALUE,
+                    onClick = {
+                        cardOnClick(gamelan)
+                        selectedItem(gamelan)
+                    }
+                )
             }
         }
     }

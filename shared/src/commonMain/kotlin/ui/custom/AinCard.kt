@@ -1,5 +1,6 @@
 package ui.custom
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,10 +24,12 @@ fun AinCard(
     additionalText: String = AppConstant.DEFAULT_STRING_VALUE,
     modifier: Modifier = Modifier.fillMaxWidth(),
     verticalArrangement: Arrangement.HorizontalOrVertical = Arrangement.Center,
-    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally
+    horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
+    onClick: () -> Unit = {}
 ) {
     Card(
-        shape = RoundedCornerShape(percent = DefaultSize.DEFAULT_ROUNDED_CORNER_PERCENTAGE)
+        shape = RoundedCornerShape(percent = DefaultSize.DEFAULT_ROUNDED_CORNER_PERCENTAGE),
+        modifier = Modifier.clickable(enabled = true, onClick = onClick)
     ) {
         Column (
             modifier = modifier.padding(all = DefaultPadding.DEFAULT_CONTENT_PADDING_ALL),

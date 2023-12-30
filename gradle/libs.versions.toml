@@ -18,11 +18,13 @@ gradle-osdetector = "1.4.0"
 junit = "4.13.2"
 koin-core = "3.2.0"
 koin-test-junit4 = "3.0"
+kotlin-logging-jvm = "6.0.1"
 kotlinx-coroutines-core = "1.7.3"
 kotlinx-datetime = "0.4.0"
 kotlinx-serialization-json = "1.6.0"
 kotlinx-serialization-plugin = "1.9.21"
 kotlinx-ksp = "1.9.21-1.0.16"
+ktor-client-logging = "2.3.7"
 lifecycle-runtime-ktx = "2.6.2"
 mvvm-flow = "0.13.0"
 compose-navigation = "2.7.6"
@@ -55,9 +57,11 @@ junit = { module = "junit:junit", version.ref = "junit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-core" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-core" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin-test-junit4" }
+kotlinx-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging-jvm" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-client-logging" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }

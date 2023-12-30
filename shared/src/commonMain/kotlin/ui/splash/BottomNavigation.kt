@@ -144,19 +144,23 @@ fun Content(
     selectedScreen: String
 ) {
     AnimatedContent(selectedScreen) {
-//        Column(
-//            modifier = Modifier
-//                .fillMaxSize()
-//                .padding(padding),
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-//        ) {
-//            Text(text = "Selected Screen: $selectedScreen")
-//        }
-        BaseNgelaras(
-            padding = padding,
-            selectedScreen = selectedScreen
-        )
+        when (it) {
+            ngelaras -> BaseNgelaras(padding = padding, selectedScreen = it)
+            else -> DummyDashboardUI(padding = padding, selectedScreen = it)
+        }
+    }
+}
+
+@Composable
+fun DummyDashboardUI(padding: PaddingValues, selectedScreen: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Selected Screen: $selectedScreen")
     }
 }
 

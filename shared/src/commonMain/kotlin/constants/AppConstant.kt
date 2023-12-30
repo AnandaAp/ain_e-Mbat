@@ -11,6 +11,7 @@ object AppConstant {
     const val CACHE_KEY = "Ain E-MBAT Cached Key"
     const val CACHE_KEY_INIT = "Ain E-MBAT Cached Key initialize value"
     const val CACHE_KEY_INIT_KEY = "Ain E-MBAT Cached Key initialize key"
+    const val DAFTAR_GAMELAN_TITLE = "daftar gamelan"
     const val ANDROID = "Android"
     const val IOS = "iOS"
     const val BOTTOM_NAV_LIST = "Bottom_Nav_List"
@@ -79,4 +80,13 @@ object DefaultPadding {
     val DEFAULT_ALL = 14.dp
     val DEFAULT_WIDTH = 14.dp
     val DEFAULT_HEIGHT = 14.dp
+    val DEFAULT_GRID_MIN_SIZE = 128.dp
+    val DEFAULT_CONTENT_HORIZONTAL_PADDING = 10.dp
+    val DEFAULT_CONTENT_VERTICAL_PADDING = 10.dp
+    val DEFAULT_CONTENT_PADDING_ALL = 10.dp
+}
+
+object DefaultSize {
+    const val DEFAULT_ROUNDED_CORNER_PERCENTAGE = 25
+    const val DEFAULT_ROUNDED_CORNER_FLOAT = .25f
 }

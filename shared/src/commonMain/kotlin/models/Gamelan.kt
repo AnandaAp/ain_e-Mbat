@@ -7,6 +7,9 @@ import kotlinx.serialization.Serializable
 
 @Stable
 @Serializable
+/**
+ *  Model class for Gamelan object. This class contain the name of the Gamelan.
+ */
 data class Gamelan(
     var name: String
 ) {
@@ -15,6 +18,10 @@ data class Gamelan(
             "}"
 
     fun isNotNullOrEmpty() = this != null && name.isNotNullOrEmpty()
+
+    fun isNotEmpty() = name.isNotEmpty()
+
+    fun isEmpty() = name.isEmpty()
 
     companion object DummyGamelan {
         val gamelan = Gamelan(name = AppConstant.DEFAULT_GAMELAN_VALUE)

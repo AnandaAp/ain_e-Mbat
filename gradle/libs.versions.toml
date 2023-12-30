@@ -29,6 +29,7 @@ compose-navigation = "2.7.6"
 okhttp = "4.11.0"
 room-compiler = "2.6.1"
 shared-firebase = "1.8.1"
+precompose = "1.5.10"
 timber = "4.7.1"
 skiko-awt-runtime-windows-x64 = "0.7.85.4"
 
@@ -81,6 +82,10 @@ compose-test-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
 
 skiko-awt-runtime-windows-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-windows-x64", version.ref = "skiko-awt-runtime-windows-x64" }
 
+precompose-core = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
+precompose-viewmodel = { group = "moe.tlaster", name = "precompose-viewmodel", version.ref = "precompose" }
+precompose-koin = { group = "moe.tlaster", name = "precompose-koin", version.ref = "precompose" }
+
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 osdetector = { id = "com.google.gradle.osdetector-gradle-plugin", version.ref = "gradle-osdetector" }
@@ -122,4 +127,10 @@ compose-test = [
     "compose-test-ui-junit4",
     "compose-test-ui-manifest",
     "compose-test-ui-tooling"
+]
+
+precompose = [
+    "precompose-core",
+    "precompose-viewmodel",
+    "precompose-koin"
 ]

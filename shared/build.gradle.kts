@@ -39,6 +39,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
 
                 implementation(compose.foundation)
+                api(compose.animation)
+                api(libs.bundles.precompose)
                 implementation(compose.material3)
                 implementation(compose.ui)
                 implementation(compose.runtimeSaveable)

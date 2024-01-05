@@ -29,7 +29,7 @@ fun MobileContent(
             BottomNavigation.ngelaras -> NgelarasNav(
                 padding = padding,
                 selectedScreen = screen,
-                ngelarasViewModel = ngelarasViewModel
+                viewModel = ngelarasViewModel
             )
             else -> DummyDashboardUI(padding = padding, selectedScreen = screen)
         }

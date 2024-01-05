@@ -1,5 +1,6 @@
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -35,7 +36,7 @@ fun App(
                     BottomNavigation.rekaman
                 )
             Column(
-                Modifier.fillMaxWidth(),
+                Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 AinMbatBottomNavigation(screens = screens) { padding, screen ->

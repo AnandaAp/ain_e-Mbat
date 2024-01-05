@@ -27,7 +27,7 @@ object RuntimeCache {
     private fun String.isBoolean(): Boolean = TRUE.equals(this, ignoreCase = true)
             || FALSE.equals(this, ignoreCase = true)
 
-    fun <T : Any> put(key: String, value: T): Boolean {
+    fun <T : Any> put(key: String, value: T?): Boolean {
         if (key.isFoundInCache()) {
             remove(key)
         }

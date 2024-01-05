@@ -15,11 +15,11 @@ import androidx.compose.ui.text.font.FontWeight
 import constants.AppConstant
 import constants.DefaultPadding
 import constants.DefaultSize
-import constants.isNotNullOrEmpty
+import util.isNotNullOrEmpty
 
 @Composable
 fun AinCard(
-    title: String,
+    title: String = AppConstant.DEFAULT_STRING_VALUE,
     subtitle: String = AppConstant.DEFAULT_STRING_VALUE,
     additionalText: String = AppConstant.DEFAULT_STRING_VALUE,
     modifier: Modifier = Modifier.fillMaxWidth(),

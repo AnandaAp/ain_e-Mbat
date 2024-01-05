@@ -9,4 +9,5 @@ sealed class NgelarasRoute (val route: String = AppConstant.DEFAULT_STRING_VALUE
 
     data object NgelarasHome: NgelarasRoute(route = "/ngelaras/home/{uuid}")
     data object NgelarasGamelanList: NgelarasRoute(route = "/ngelaras/gamelan/{uuid}")
+    data object NgelarasGamelanPage: NgelarasRoute(route = "/ngelaras/main/{uuid}")
 }

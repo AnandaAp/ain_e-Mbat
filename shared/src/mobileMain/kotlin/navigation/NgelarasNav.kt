@@ -4,18 +4,23 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import constants.AppConstant
 import constants.DefaultPadding
+import constants.RuntimeCacheConstant
 import models.NgelarasRoute
+import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
+import moe.tlaster.precompose.viewmodel.ViewModel
+import moe.tlaster.precompose.viewmodel.viewModel
 import ui.ngelaras.MobileNgelaras
+import ui.ngelaras.NgelarasListOfGamelan
 import viewmodel.NgelarasViewModel
 
 @Composable
 fun NgelarasNav(
     padding: PaddingValues = PaddingValues(all = DefaultPadding.DEFAULT_ALL),
     selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE,
-    ngelarasViewModel: NgelarasViewModel = NgelarasViewModel()
+    viewModel: NgelarasViewModel = NgelarasViewModel()
 ) {
     val navigator = rememberNavigator()
 
@@ -25,14 +30,36 @@ fun NgelarasNav(
         navTransition = NavTransition()
     ) {
         scene(route = NgelarasRoute.NgelarasHome.route) {
+            val animateState = viewModel.animateState.collectAsStateWithLifecycle()
             MobileNgelaras(
+                navigator = navigator,
                 padding = padding,
                 selectedScreen = selectedScreen,
-                viewModel = ngelarasViewModel
+                viewModel = viewModel,
+                animateState = animateState.value
             )
         }
 
         scene(route = NgelarasRoute.NgelarasGamelanList.route) {
+            val topTitle = viewModel.selectedCategoryOfGamelan.collectAsStateWithLifecycle()
+            val animateState = viewModel.animateState.collectAsStateWithLifecycle()
+
+            NgelarasListOfGamelan(
+                navigator = navigator,
+                padding = padding,
+                fetchListOfGamelan = { viewModel.fetchListOfGamelan() },
+                cardModels = viewModel.retrievedCardModel.collectAsStateWithLifecycle(),
+                topTitle = topTitle.value.name,
+                onCardClick = {
+                    if (it != null) {
+                        viewModel.computeCardOnClick(it)
+                    }
+                },
+                animateState = animateState.value
+            )
+        }
+
+        scene(route = NgelarasRoute.NgelarasGamelanPage.route) {
 
         }
     }

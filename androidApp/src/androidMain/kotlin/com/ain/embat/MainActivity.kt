@@ -18,7 +18,7 @@ import constants.Characters.EMPTY
 import constants.ExceptionConstant
 import constants.FlagsConstant
 import constants.RuntimeCacheConstant.APP_PRODUCT
-import constants.isNotNullOrEmpty
+import util.isNotNullOrEmpty
 import models.Product
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
@@ -95,7 +95,6 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun RenderView() {
-
         Crossfade(
             targetState = _product.type,
             label = TAG!!

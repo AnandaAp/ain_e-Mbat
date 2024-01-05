@@ -105,6 +105,7 @@ fun AinMbatBottomNavigation(
                  }
             }
             Scaffold(
+                modifier = Modifier.fillMaxSize(),
                 bottomBar = {
                     val gradient = BaseGradient()
 

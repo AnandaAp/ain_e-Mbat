@@ -9,5 +9,5 @@ object BottomNavigation {
 }
 
 object NgelarasConstant {
-    const val NGELARAS_SELECTED_GAMELAN = "the s3lect3d g@mel4n 1n N93L4R@S"
+    const val NGELARAS_SELECTED_CATEGORY_GAMELAN = "the s3lect3d type 0f g@mel4n 1n N93L4R@S"
 }

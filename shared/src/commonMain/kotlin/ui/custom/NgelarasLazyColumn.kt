@@ -18,20 +18,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import constants.AppConstant
 import constants.DefaultPadding
+import models.CategoryOfGamelan
 import models.Gamelan
 
 @Composable
 fun NgelarasLazyColumn(
     padding: PaddingValues,
-    item: List<Gamelan>,
+    item: List<CategoryOfGamelan>,
     selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE,
-    selectedItem: (Gamelan) -> Unit = { Gamelan() },
-    cardOnClick: (Gamelan) -> Unit = { selectedItem(it) }
+    selectedItem: (CategoryOfGamelan) -> Unit = { CategoryOfGamelan() },
+    cardOnClick: (CategoryOfGamelan) -> Unit = { selectedItem(it) },
+    modifier: Modifier = Modifier
+        .padding(padding)
+        .fillMaxSize()
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(padding),
+        modifier = modifier,
         verticalArrangement = Arrangement.Top
     ) {
         Text(

@@ -14,8 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import constants.AppConstant
 import constants.DefaultPadding
-import constants.dummyGamelanList
 import ui.custom.NgelarasLazyColumn
+import util.dummyCategoryOfGamelan
 
 @Composable
 fun BaseNgelaras(
@@ -37,7 +37,7 @@ fun BaseNgelaras(
     ) {
         NgelarasLazyColumn(
             padding = padding,
-            item = dummyGamelanList(),
+            item = dummyCategoryOfGamelan(),
             selectedScreen = selectedScreen,
             cardOnClick = { onClickState = !onClickState }
         )

@@ -1,7 +1,6 @@
 package constants
 
 import androidx.compose.ui.unit.dp
-import models.Gamelan
 
 object AppConstant {
     const val PRODUCT = "Product"
@@ -18,6 +17,8 @@ object AppConstant {
     const val DEFAULT_STRING_VALUE = ""
     const val DEFAULT_GAMELAN_VALUE = "Gamelan Doe"
     const val NAME = "name"
+    const val UNIQUE = "unique"
+    const val LIST_OF_GAMELAN_TOP_TITLE = "Daftar Gamelan Dari\n"
     object Type {
         const val ANDROID_ONLY = "ANDROID_ONLY"
         const val IOS_ONLY = "IOS_ONLY"
@@ -27,6 +28,7 @@ object AppConstant {
 
 object RuntimeCacheConstant {
     const val APP_PRODUCT = "Application product"
+    const val CATEGORY_OF_GAMELAN_KEY = "CategorY 0F Gamel@n R3trieven From F1re5t0r3"
     const val GAMELAN_KEY = "Gamel@n R3trieven From F1re5t0r3"
     const val TRUE = "true"
     const val FALSE = "false"
@@ -69,14 +71,6 @@ object SplashScreen {
     const val DIRECTED_BY = "Directed by:"
     const val AUTHOR = "Muhamad Ainun Zibran"
 }
-
-fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
-        && this.isNotEmpty()
-        && this != Characters.EMPTY
-
-fun dummyGamelanList() = listOf(Gamelan.gamelan, Gamelan.gamelan, Gamelan.gamelan)
-
-fun List<*>.isNotNullOrEmpty(): Boolean = this != null && this.isNotEmpty()
 
 object DefaultPadding {
     val DEFAULT_ALL = 14.dp

@@ -15,7 +15,6 @@ import androidx.compose.ui.Modifier
 import constants.AppConstant
 import constants.DefaultPadding
 import constants.RuntimeCacheConstant
-import constants.dummyGamelanList
 import models.Gamelan
 import states.Status
 import ui.custom.NgelarasLazyColumn
@@ -44,7 +43,7 @@ fun MobileNgelaras(
     ) {
         NgelarasLazyColumn(
             padding = padding,
-            item = viewModel.cache.getList<Gamelan>(RuntimeCacheConstant.GAMELAN_KEY),
+            item = viewModel.cache.getList(RuntimeCacheConstant.GAMELAN_KEY),
             selectedScreen = selectedScreen,
             cardOnClick = { gamelan ->
                 onClickState = !onClickState
@@ -56,11 +55,9 @@ fun MobileNgelaras(
         )
 
         when (selectedUIState.value) {
-            Status.Success -> println("sukses")
-            Status.Failed -> println("gagal")
-            Status.Unknown -> println("ga tau")
-            Status.Pending -> println("pending")
-            else -> println("ga tau")
+            Status.Success -> Unit
+            Status.Failed -> Unit
+            else -> Unit
         }
     }
 }

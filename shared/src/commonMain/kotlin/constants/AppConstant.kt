@@ -70,7 +70,7 @@ object SplashScreen {
     const val AUTHOR = "Muhamad Ainun Zibran"
 }
 
-inline fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
+fun String.isNotNullOrEmpty(): Boolean = this.isNotBlank()
         && this.isNotEmpty()
         && this != Characters.EMPTY
 

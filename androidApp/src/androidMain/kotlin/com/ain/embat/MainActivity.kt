@@ -53,19 +53,18 @@ class MainActivity : BaseActivity() {
         val system by systemViewModel.systemOnboarding.collectAsStateWithLifecycle()
 
         SplashScreen()
-        LaunchedEffect(key1 = this) {
+        LaunchedEffect(key1 = this, key2 = system) {
             productViewModel.fetch()
             systemViewModel.fetch()
             ngelarasViewModel.fetch()
-        }
-        LaunchedEffect(key1 = system) {
+
             val map: Any = runtimeCache.get(AppConstant.SHADY_SUBSYSTEM) ?: mapOf<String, Any>()
             var isOnboardingFull = EMPTY
             if ((map as Map<*, *>).isNotEmpty()) {
                 isOnboardingFull = map[FlagsConstant.IS_ONBOARDING_FULL].toString()
             }
             if (isOnboardingFull.isNotNullOrEmpty()) {
-                Timber.tag(TAG).e("Shady Subsystem:[\n$map\n]")
+                Timber.tag(TAG).e("Shady Subsystem:[\n\t$map\n]")
             }
         }
         HandleAppBasedByProduct()

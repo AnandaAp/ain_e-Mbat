@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import constants.BottomNavigation
 import navigation.NgelarasNav
-import ui.ngelaras.MobileNgelaras
 import ui.splash.DummyDashboardUI
 import viewmodel.BaseViewModel
 import viewmodel.NgelarasViewModel
@@ -24,14 +23,15 @@ fun MobileContent(
             }
         }
     }
-    AnimatedContent(selectedScreen) {
-        when (it) {
+
+    AnimatedContent(selectedScreen) { screen ->
+        when (screen) {
             BottomNavigation.ngelaras -> NgelarasNav(
                 padding = padding,
-                selectedScreen = selectedScreen,
+                selectedScreen = screen,
                 ngelarasViewModel = ngelarasViewModel
             )
-            else -> DummyDashboardUI(padding = padding, selectedScreen = it)
+            else -> DummyDashboardUI(padding = padding, selectedScreen = screen)
         }
     }
 }

@@ -17,6 +17,7 @@ import constants.DefaultPadding
 import constants.RuntimeCacheConstant
 import models.Gamelan
 import states.Status
+import ui.custom.AinStatusHandler
 import ui.custom.NgelarasLazyColumn
 import viewmodel.NgelarasViewModel
 
@@ -54,10 +55,6 @@ fun MobileNgelaras(
             }
         )
 
-        when (selectedUIState.value) {
-            Status.Success -> Unit
-            Status.Failed -> Unit
-            else -> Unit
-        }
+        AinStatusHandler(status = selectedUIState.value)
     }
 }

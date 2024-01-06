@@ -27,8 +27,6 @@ import moe.tlaster.precompose.navigation.Navigator
 import moe.tlaster.precompose.navigation.rememberNavigator
 import states.AinAnimationState
 import ui.custom.AinLazyColumn
-import util.isNotNullOrEmpty
-import util.shimmerLoadingAnimation
 
 @Composable
 fun NgelarasListOfGamelan(

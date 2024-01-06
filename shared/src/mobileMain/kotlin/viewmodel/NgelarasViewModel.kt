@@ -5,7 +5,10 @@ import constants.FirestoreConstant
 import constants.RuntimeCacheConstant
 import dev.gitlive.firebase.FirebaseException
 import di.RuntimeCache
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.IO
 import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -132,12 +135,14 @@ class NgelarasViewModel: BaseViewModel() {
         fetchListCategoryOfGamelan()
     }
 
-    private fun fetchListCategoryOfGamelan() {
-        coroutine1.launch {
+    private suspend fun fetchListCategoryOfGamelan() {
+        val channel = Channel<Boolean>()
+        viewModelScope.launch(Dispatchers.IO) {
             if (cache.getList<Gamelan>(key = RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY).isNotNullOrEmpty()) {
                 return@launch
             }
 
+            delay(2000)
             val response = async {
                 return@async getListOfCategoryOfGamelan()
             }.await()
@@ -149,13 +154,24 @@ class NgelarasViewModel: BaseViewModel() {
                 }
                 firestoreCategoriesOfGamelan.update { categories }
             }
-            if (retrievedCategoriesOfGamelan.value.isNotNullOrEmpty() && cache.put(
-                    key = RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY,
-                    value = retrievedCategoriesOfGamelan.value
-            )) {
-                delay(500)
-                shimmerAnimateState.update { AinAnimationState.Hide }
+
+            val isDataSaved = retrievedCategoriesOfGamelan.value.isNotNullOrEmpty() && cache.put(
+                key = RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY,
+                value = retrievedCategoriesOfGamelan.value
+            )
+
+            if (isDataSaved) {
+                channel.send(isDataSaved)
             }
+            channel.close()
+        }
+        transformAnimatedState(channel)
+    }
+
+    private suspend fun transformAnimatedState(channel: Channel<Boolean>) {
+        if (channel.receive()) {
+            shimmerAnimateState.update { AinAnimationState.Hide }
+            channel.close()
         }
     }
 

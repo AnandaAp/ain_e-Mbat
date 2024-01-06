@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,7 +26,7 @@ import states.Status
 import ui.custom.AinStatusHandler
 import ui.custom.NgelarasLazyColumn
 import ui.custom.ShimmerLoadingScreen
-import viewmodel.NgelarasViewModel
+import viewmodel.basic.NgelarasViewModel
 
 @Composable
 fun MobileNgelaras(

@@ -28,6 +28,7 @@ kotlin {
             }
         }
         commonMain.configure {
+            kotlin.srcDirs("build/generated/ksp/main/kotlin")
             dependencies {
                 implementation(compose.runtime)
                 implementation(libs.atomicfu)
@@ -150,4 +151,8 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
 }

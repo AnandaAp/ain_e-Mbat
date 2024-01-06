@@ -2,7 +2,9 @@ package com.ain.embat.base
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import com.ain.embat.ui.theme.Material3AinEmbatTheme
 import constants.AppConstant
 import di.RuntimeCache
 import org.koin.core.component.KoinComponent
@@ -11,12 +13,17 @@ import timber.log.Timber
 
 open class BaseActivity: ComponentActivity(), KoinComponent {
     protected val TAG = this::class.simpleName
-    protected val runtimeCache: RuntimeCache by inject()
+    protected val cache: RuntimeCache by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Timber.tag(TAG).e("$TAG is now on state: onCreate")
-        Timber.tag(TAG).d(runtimeCache.getString(AppConstant.CACHE_KEY_INIT_KEY))
+        Timber.tag(TAG).d(cache.getString(AppConstant.CACHE_KEY_INIT_KEY))
+        setContent {
+            Material3AinEmbatTheme {
+                InitiateUI()
+            }
+        }
     }
 
     override fun onDestroy() {
@@ -41,5 +48,10 @@ open class BaseActivity: ComponentActivity(), KoinComponent {
     }
 
     @Composable
-    protected open fun InitiateUI() = Unit
+    protected open fun InitiateUI() {
+        ConfigureScreenOrientation()
+    }
+
+    @Composable
+    protected open fun ConfigureScreenOrientation() = Unit
 }

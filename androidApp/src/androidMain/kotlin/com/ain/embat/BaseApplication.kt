@@ -11,6 +11,8 @@ import dev.gitlive.firebase.firestore.firestore
 import dev.gitlive.firebase.initialize
 import di.initMobileKoin
 import org.conscrypt.Conscrypt
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
 import timber.log.Timber
 import timber.log.Timber.DebugTree
@@ -26,7 +28,10 @@ class BaseApplication: Application(), KoinComponent, LocalCacheSettings {
         appContext = applicationContext
         Security.insertProviderAt(Conscrypt.newProvider(), 1)
         Timber.plant(DebugTree())
-        initMobileKoin()
+        initMobileKoin(appDeclaration = {
+            androidLogger()
+            androidContext(this@BaseApplication)
+        })
         val settings = firestoreSettings {
             // Use memory cache
             setLocalCacheSettings(memoryCacheSettings {})

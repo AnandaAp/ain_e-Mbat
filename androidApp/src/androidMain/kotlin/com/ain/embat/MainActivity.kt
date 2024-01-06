@@ -2,8 +2,6 @@ package com.ain.embat
 
 
 import MainView
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -25,26 +23,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import ui.splash.SplashScreen
 import util.isNotNullOrEmpty
-import viewmodel.NgelarasViewModel
-import viewmodel.ProductViewModel
-import viewmodel.SystemViewModel
+import viewmodel.basic.NgelarasViewModel
+import viewmodel.basic.ProductViewModel
+import viewmodel.basic.SystemViewModel
 
 class MainActivity : BaseActivity() {
     private val productViewModel: ProductViewModel by viewModel()
-    private val systemViewModel: SystemViewModel  by viewModel()
+    private val systemViewModel: SystemViewModel by viewModel()
     private val ngelarasViewModel: NgelarasViewModel by viewModel()
     private lateinit var _product: Product
     private lateinit var _bottomNavItems: List<String>
     private lateinit var eligibility: String
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Material3AinEmbatTheme {
-                InitializeProduct()
-            }
-        }
+    @Composable
+    override fun InitiateUI() {
+        InitializeProduct()
     }
 
     /**
@@ -60,7 +53,7 @@ class MainActivity : BaseActivity() {
             systemViewModel.fetch()
             ngelarasViewModel.fetch()
 
-            val map: Any = runtimeCache.get(AppConstant.SHADY_SUBSYSTEM) ?: mapOf<String, Any>()
+            val map: Any = cache.get(AppConstant.SHADY_SUBSYSTEM) ?: mapOf<String, Any>()
             var isOnboardingFull = EMPTY
             if ((map as Map<*, *>).isNotEmpty()) {
                 isOnboardingFull = map[FlagsConstant.IS_ONBOARDING_FULL].toString()
@@ -84,12 +77,12 @@ class MainActivity : BaseActivity() {
         LaunchedEffect(key1 = product, key2 = bottomNavItems) {
             eligibility = eligibilityProvider(product)
             if (ExceptionConstant.NOT_ELIGIBLE != eligibility) {
-                runtimeCache.put(APP_PRODUCT, product)
-                Timber.tag(TAG).d(runtimeCache.getString(APP_PRODUCT))
+                cache.put(APP_PRODUCT, product)
+                Timber.tag(TAG).d(cache.getString(APP_PRODUCT))
             }
             if (bottomNavItemsProvider(bottomNavItems).isNotEmpty()) {
-                runtimeCache.put(SHADY, bottomNavItemsProvider(bottomNavItems))
-                Timber.tag(TAG).d(runtimeCache.getString(SHADY))
+                cache.put(SHADY, bottomNavItemsProvider(bottomNavItems))
+                Timber.tag(TAG).d(cache.getString(SHADY))
             }
         }
         RenderView()
@@ -104,12 +97,12 @@ class MainActivity : BaseActivity() {
         ) { productType ->
             when (productType) {
                 AppConstant.Type.ANDROID_ONLY -> MainView(
-                    runtimeCache,
+                    cache,
                     ngelarasViewModel,
                     AndroidNavigator(context = context)
                 )
                 AppConstant.Type.FULL_TYPE -> MainView(
-                    runtimeCache,
+                    cache,
                     ngelarasViewModel,
                     AndroidNavigator(context = context)
                 )

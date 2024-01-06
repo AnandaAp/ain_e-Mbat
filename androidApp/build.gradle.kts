@@ -3,7 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.compose")
     id("com.google.gms.google-services")
-    id("com.google.devtools.ksp")
+    alias(libs.plugins.ksp)
 }
 
 kotlin {

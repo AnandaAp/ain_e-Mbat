@@ -7,8 +7,8 @@ import constants.BottomNavigation
 import navigation.NgelarasNav
 import ui.splash.DummyDashboardUI
 import util.Navigator
-import viewmodel.BaseViewModel
-import viewmodel.NgelarasViewModel
+import viewmodel.basic.BaseViewModel
+import viewmodel.basic.NgelarasViewModel
 
 @Composable
 fun MobileContent(

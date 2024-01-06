@@ -1,4 +1,4 @@
-package viewmodel
+package viewmodel.basic
 
 import constants.AppConstant
 import constants.FirestoreConstant

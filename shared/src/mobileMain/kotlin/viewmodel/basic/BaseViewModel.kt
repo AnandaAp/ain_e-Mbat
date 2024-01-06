@@ -1,9 +1,10 @@
-package viewmodel
+package viewmodel.basic
 
 import dev.gitlive.firebase.firestore.FirebaseFirestore
 import di.RuntimeCache
 import kotlinx.coroutines.CoroutineScope
 import org.koin.core.component.inject
+import viewmodel.CommonBaseViewModel
 import viewmodel.interfaces.Behaviours
 
 open class BaseViewModel: CommonBaseViewModel(), Behaviours {

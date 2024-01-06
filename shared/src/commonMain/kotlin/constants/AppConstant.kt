@@ -14,7 +14,7 @@ object AppConstant {
     const val ANDROID = "Android"
     const val IOS = "iOS"
     const val BOTTOM_NAV_LIST = "Bottom_Nav_List"
-    const val DEFAULT_STRING_VALUE = ""
+    const val DEFAULT_STRING_VALUE = Characters.EMPTY
     const val DEFAULT_GAMELAN_VALUE = "Gamelan Doe"
     const val NAME = "name"
     const val UNIQUE = "unique"
@@ -85,4 +85,9 @@ object DefaultPadding {
 object DefaultSize {
     const val DEFAULT_ROUNDED_CORNER_PERCENTAGE = 25
     const val DEFAULT_ROUNDED_CORNER_FLOAT = .25f
+}
+
+object DefaultViewModel {
+    const val DEFAULT_KEY_VALUE = 19280081
+    const val DEFAULT_SAVED_VALUE_KEY = "DEf@ul7 54v3d v@Lu3"
 }

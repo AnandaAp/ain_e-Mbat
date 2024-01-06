@@ -4,10 +4,10 @@ import dev.gitlive.firebase.firestore.firestore
 import org.koin.core.context.startKoin
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-import viewmodel.BaseViewModel
-import viewmodel.NgelarasViewModel
-import viewmodel.ProductViewModel
-import viewmodel.SystemViewModel
+import viewmodel.basic.BaseViewModel
+import viewmodel.basic.NgelarasViewModel
+import viewmodel.basic.ProductViewModel
+import viewmodel.basic.SystemViewModel
 fun mobileModule() = module {
     includes(appModule())
     single { Firebase.firestore }

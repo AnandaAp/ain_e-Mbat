@@ -19,14 +19,19 @@ class NgelarasActivity: BaseActivity() {
         }
     }
 
-    @Composable
-    override fun InitiateUI() {
-        val activity = LocalContext.current as Activity
-        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+    override fun onDestroy() {
+        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+        super.onDestroy()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
+    @Composable
+    override fun InitiateUI() {
+        super.InitiateUI()
+    }
+
+    @Composable
+    override fun ConfigureScreenOrientation() {
+        val activity = LocalContext.current as Activity
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
 }

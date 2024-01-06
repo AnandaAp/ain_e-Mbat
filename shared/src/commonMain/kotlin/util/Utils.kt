@@ -17,6 +17,7 @@ import constants.AppConstant
 import models.CategoryOfGamelan
 import models.Gamelan
 import models.ShimmerAnimationData
+import moe.tlaster.precompose.stateholder.SavedStateHolder
 import states.AinAnimationState
 
 fun String.isNotNullOrEmpty() = this != null
@@ -101,3 +102,6 @@ fun Modifier.shimmerLoadingAnimation(
 expect interface Navigator {
     fun navigate(tag: String)
 }
+
+fun SavedStateHolder.isNull(): Boolean = this == null
+fun SavedStateHolder.isNotNull(): Boolean = !this.isNull()

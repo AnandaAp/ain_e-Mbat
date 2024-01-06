@@ -12,7 +12,7 @@ import moe.tlaster.precompose.navigation.transition.NavTransition
 import ui.ngelaras.MobileNgelaras
 import ui.ngelaras.NgelarasListOfGamelan
 import util.Navigator
-import viewmodel.NgelarasViewModel
+import viewmodel.basic.NgelarasViewModel
 
 @Composable
 fun NgelarasNav(

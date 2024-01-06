@@ -1,7 +1,7 @@
 import androidx.compose.runtime.Composable
 import di.RuntimeCache
 import util.Navigator
-import viewmodel.NgelarasViewModel
+import viewmodel.basic.NgelarasViewModel
 
 actual fun getPlatformName(): String = "Android"
 actual fun navigateToLanscapeUI() {}

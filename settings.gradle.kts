@@ -23,7 +23,7 @@ pluginManagement {
 
         id("com.android.application").version(agpVersion)
         id("com.android.library").version(agpVersion)
-
+        id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin").version("2.0.1")
         id("org.jetbrains.compose").version(composeVersion)
     }
 }

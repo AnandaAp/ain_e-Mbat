@@ -1,4 +1,4 @@
-package com.ain.embat
+package com.ain.embat.ui.main
 
 
 import MainView

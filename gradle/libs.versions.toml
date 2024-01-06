@@ -34,6 +34,7 @@ shared-firebase = "1.8.1"
 precompose = "1.5.10"
 timber = "4.7.1"
 skiko-awt-runtime-windows-x64 = "0.7.85.4"
+google-generativeai = "0.1.2"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
@@ -90,6 +91,7 @@ skiko-awt-runtime-windows-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtim
 precompose-core = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
 precompose-viewmodel = { group = "moe.tlaster", name = "precompose-viewmodel", version.ref = "precompose" }
 precompose-koin = { group = "moe.tlaster", name = "precompose-koin", version.ref = "precompose" }
+google-generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "google-generativeai" }
 
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }

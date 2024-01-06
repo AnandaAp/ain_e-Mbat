@@ -10,6 +10,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.core.view.WindowCompat
 import com.ain.embat.ui.theme.Material3AinEmbatTheme
+import com.google.ai.client.generativeai.GenerativeModel
 import constants.AppConstant
 import di.RuntimeCache
 import moe.tlaster.precompose.PreComposeApp
@@ -20,6 +21,7 @@ import timber.log.Timber
 open class BaseActivity: ComponentActivity(), KoinComponent {
     protected val TAG = this::class.simpleName
     protected val cache: RuntimeCache by inject()
+    protected val model: GenerativeModel by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

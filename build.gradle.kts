@@ -9,4 +9,5 @@ plugins {
     id("org.jetbrains.compose").apply(false)
     alias(libs.plugins.google.services).apply(false)
     alias(libs.plugins.ksp).apply(false)
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin").apply(false)
 }

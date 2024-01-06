@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.compose")
     id("com.google.gms.google-services")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.ksp)
 }
 
@@ -12,6 +13,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(project(":shared"))
+//                implementation(libs.google.generativeai)
             }
         }
     }
@@ -20,6 +22,14 @@ kotlin {
 android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
     namespace = "com.ain.embat"
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    secrets {
+        propertiesFileName = "secret.properties"
+    }
 
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
 

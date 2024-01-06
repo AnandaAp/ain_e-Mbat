@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.ksp)
     id("com.android.library")
     id("org.jetbrains.compose")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 kotlin {
@@ -21,6 +22,11 @@ kotlin {
             binaryOption("bundleId", "com.ain.embat")
         }
     }
+
+    secrets {
+        propertiesFileName = "secret.properties"
+    }
+
     sourceSets {
         all {
             languageSettings {
@@ -52,6 +58,7 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.logging.jvm)
+                api((libs.google.generativeai))
             }
         }
 
@@ -136,6 +143,14 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/main/res")
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    secrets {
+        propertiesFileName = "secret.properties"
+    }
 
     lint {
         baseline = file("lint-baseline.xml")

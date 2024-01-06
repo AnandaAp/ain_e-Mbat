@@ -1,12 +1,18 @@
 package com.ain.embat.base
 
+import android.os.Build
 import android.os.Bundle
+import android.view.WindowInsets
+import android.view.WindowInsetsController
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
+import androidx.core.view.WindowCompat
 import com.ain.embat.ui.theme.Material3AinEmbatTheme
 import constants.AppConstant
 import di.RuntimeCache
+import moe.tlaster.precompose.PreComposeApp
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import timber.log.Timber
@@ -20,8 +26,10 @@ open class BaseActivity: ComponentActivity(), KoinComponent {
         Timber.tag(TAG).e("$TAG is now on state: onCreate")
         Timber.tag(TAG).d(cache.getString(AppConstant.CACHE_KEY_INIT_KEY))
         setContent {
-            Material3AinEmbatTheme {
-                InitiateUI()
+            PreComposeApp {
+                Material3AinEmbatTheme {
+                    InitiateUI()
+                }
             }
         }
     }
@@ -54,4 +62,18 @@ open class BaseActivity: ComponentActivity(), KoinComponent {
 
     @Composable
     protected open fun ConfigureScreenOrientation() = Unit
+
+    protected fun hideSystemUI() {
+        actionBar?.hide()
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+            window.addFlags(WindowManager.LayoutParams.TYPE_STATUS_BAR)
+        } else {
+            window.insetsController?.apply {
+                hide(WindowInsets.Type.statusBars())
+                systemBarsBehavior = WindowInsetsController.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+    }
 }

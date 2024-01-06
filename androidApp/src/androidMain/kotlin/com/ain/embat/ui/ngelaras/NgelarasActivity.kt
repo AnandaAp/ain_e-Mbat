@@ -2,22 +2,12 @@ package com.ain.embat.ui.ngelaras
 
 import android.app.Activity
 import android.content.pm.ActivityInfo
-import android.os.Bundle
-import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import com.ain.embat.base.BaseActivity
-import com.ain.embat.ui.theme.Material3AinEmbatTheme
+import ui.ngelaras.BaseLandscapeNgelaras
 
 class NgelarasActivity: BaseActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            Material3AinEmbatTheme {
-                InitiateUI()
-            }
-        }
-    }
 
     override fun onDestroy() {
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -27,6 +17,8 @@ class NgelarasActivity: BaseActivity() {
     @Composable
     override fun InitiateUI() {
         super.InitiateUI()
+        BaseLandscapeNgelaras()
+        hideSystemUI()
     }
 
     @Composable

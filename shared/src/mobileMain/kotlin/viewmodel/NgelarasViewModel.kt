@@ -104,9 +104,9 @@ class NgelarasViewModel: BaseViewModel() {
 
     fun fetchListOfGamelan() {
         coroutine2.launch {
-            if (cache.getList<Gamelan>(key = RuntimeCacheConstant.GAMELAN_KEY).isNotNullOrEmpty()) {
-                return@launch
-            }
+//            if (cache.getList<Gamelan>(key = RuntimeCacheConstant.GAMELAN_KEY).isNotNullOrEmpty()) {
+//                return@launch
+//            }
             delay(2000)
             val response = async {
                 val retrievedGamelan = getListOfGamelan()

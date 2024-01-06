@@ -1,7 +1,6 @@
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,26 +26,24 @@ fun App(
             selectedScreen = screen,
         )
     },
-    onNewActivity: Navigator
+    activityNavigator: Navigator
 ) {
     PreComposeApp {
-        MaterialTheme {
-            val screens =
-                if (cache.getList<String>(SHADY).isNotEmpty()) cache.getList(SHADY)
-                else listOf(
-                    BottomNavigation.ngelaras,
-                    BottomNavigation.rekaman
-                )
-            Column(
-                Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                AinMbatBottomNavigation(screens = screens) { padding, screen ->
-                    if (!isMobile) {
-                        Content(padding = padding, selectedScreen = screen)
-                    } else {
-                        mobileContent(padding, screen, onNewActivity)
-                    }
+        val screens =
+            if (cache.getList<String>(SHADY).isNotEmpty()) cache.getList(SHADY)
+            else listOf(
+                BottomNavigation.ngelaras,
+                BottomNavigation.rekaman
+            )
+        Column(
+            Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            AinMbatBottomNavigation(screens = screens) { padding, screen ->
+                if (!isMobile) {
+                    Content(padding = padding, selectedScreen = screen)
+                } else {
+                    mobileContent(padding, screen, activityNavigator)
                 }
             }
         }

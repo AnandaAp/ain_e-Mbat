@@ -20,8 +20,8 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import constants.AppConstant
 import constants.DefaultPadding
+import constants.NavigationConstant
 import models.CardModel
-import models.NgelarasRoute
 import moe.tlaster.precompose.lifecycle.LocalLifecycleOwner
 import moe.tlaster.precompose.navigation.Navigator
 import moe.tlaster.precompose.navigation.rememberNavigator
@@ -31,6 +31,7 @@ import ui.custom.AinLazyColumn
 @Composable
 fun NgelarasListOfGamelan(
     navigator: Navigator = rememberNavigator(),
+    activityNavigator: util.Navigator,
     padding: PaddingValues = PaddingValues(all = DefaultPadding.DEFAULT_ALL),
     verticalArrangement: Arrangement.Vertical = Arrangement.Top,
     horizontalAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
@@ -74,12 +75,12 @@ fun NgelarasListOfGamelan(
             item = cardModels.value,
             cardOnClick = {
                 onCardClick(it)
-                navigateToNgelarasMainPage(navigator)
+                navigateToNgelarasMainPage(activityNavigator)
             }
         )
     }
 }
 
-private fun navigateToNgelarasMainPage(navigator: Navigator) {
-    navigator.navigate(NgelarasRoute.NgelarasGamelanPage.route)
+private fun navigateToNgelarasMainPage(navigator: util.Navigator) {
+    navigator.navigate(NavigationConstant.NGELARAS_LANSCAPE_ACTIVITY)
 }

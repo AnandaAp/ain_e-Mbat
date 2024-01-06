@@ -45,6 +45,7 @@ fun NgelarasNav(
 
             NgelarasListOfGamelan(
                 navigator = navigator,
+                activityNavigator = activityNavigator,
                 padding = padding,
                 fetchListOfGamelan = { viewModel.fetchListOfGamelan() },
                 cardModels = viewModel.retrievedCardModel.collectAsStateWithLifecycle(),

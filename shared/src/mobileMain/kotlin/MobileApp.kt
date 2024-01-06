@@ -14,7 +14,7 @@ fun MobileApp(
     App(
         cache = cache,
         isMobile,
-        onNewActivity = navigator,
+        activityNavigator = navigator,
         mobileContent = { paddingValues, screen, onNavigator ->
             MobileContent(
                 padding = paddingValues,

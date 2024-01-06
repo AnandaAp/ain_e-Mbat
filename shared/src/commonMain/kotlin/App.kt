@@ -1,7 +1,6 @@
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -12,6 +11,7 @@ import di.RuntimeCache
 import moe.tlaster.precompose.PreComposeApp
 import ui.splash.AinMbatBottomNavigation
 import ui.splash.Content
+import util.Navigator
 
 @Composable
 fun App(
@@ -19,13 +19,15 @@ fun App(
     isMobile: Boolean = false,
     mobileContent: @Composable (
         PaddingValues,
-        String
-    ) -> Unit = { paddingValues: PaddingValues, screen: String ->
+        String,
+        Navigator
+    ) -> Unit = { paddingValues: PaddingValues, screen: String, _ ->
         Content(
             padding = paddingValues,
-            selectedScreen = screen
+            selectedScreen = screen,
         )
-    }
+    },
+    onNewActivity: Navigator
 ) {
     PreComposeApp {
         MaterialTheme {
@@ -43,7 +45,7 @@ fun App(
                     if (!isMobile) {
                         Content(padding = padding, selectedScreen = screen)
                     } else {
-                        mobileContent(padding, screen)
+                        mobileContent(padding, screen, onNewActivity)
                     }
                 }
             }
@@ -52,3 +54,4 @@ fun App(
 }
 
 expect fun getPlatformName(): String
+expect fun navigateToLanscapeUI()

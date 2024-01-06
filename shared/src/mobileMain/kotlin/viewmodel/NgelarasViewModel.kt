@@ -2,6 +2,7 @@ package viewmodel
 
 import constants.AppConstant
 import constants.FirestoreConstant
+import constants.NavigationConstant
 import constants.RuntimeCacheConstant
 import dev.gitlive.firebase.FirebaseException
 import di.RuntimeCache
@@ -21,6 +22,7 @@ import models.GamelanFrequency
 import org.koin.core.component.inject
 import states.AinAnimationState
 import states.Status
+import util.Navigator
 import util.dummyCategoryOfGamelan
 import util.dummyGamelanList
 import util.isNotNullOrEmpty
@@ -32,6 +34,7 @@ class NgelarasViewModel: BaseViewModel() {
     private val baseCategoryCardModelOfGamelan = MutableStateFlow(mutableListOf<CardModel>())
     private val baseSelectedGamelan = MutableStateFlow(Gamelan())
     private val shimmerAnimateState = MutableStateFlow(AinAnimationState.Keep)
+
     val cache: RuntimeCache by inject()
     val selectedCategoryOfGamelan = baseSelectedCategoryOfGamelan.asStateFlow()
     val retrievedCategoriesOfGamelan = firestoreCategoriesOfGamelan.asStateFlow()
@@ -203,5 +206,9 @@ class NgelarasViewModel: BaseViewModel() {
                 shimmerAnimateState.update { AinAnimationState.Hide }
             }
         }
+    }
+
+    fun navigateToLandscapeNavigator(navigator: Navigator) {
+        navigator.navigate(NavigationConstant.NGELARAS_LANSCAPE_ACTIVITY)
     }
 }

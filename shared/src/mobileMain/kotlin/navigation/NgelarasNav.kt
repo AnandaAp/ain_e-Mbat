@@ -4,23 +4,22 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import constants.AppConstant
 import constants.DefaultPadding
-import constants.RuntimeCacheConstant
 import models.NgelarasRoute
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.NavHost
 import moe.tlaster.precompose.navigation.rememberNavigator
 import moe.tlaster.precompose.navigation.transition.NavTransition
-import moe.tlaster.precompose.viewmodel.ViewModel
-import moe.tlaster.precompose.viewmodel.viewModel
 import ui.ngelaras.MobileNgelaras
 import ui.ngelaras.NgelarasListOfGamelan
+import util.Navigator
 import viewmodel.NgelarasViewModel
 
 @Composable
 fun NgelarasNav(
     padding: PaddingValues = PaddingValues(all = DefaultPadding.DEFAULT_ALL),
     selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE,
-    viewModel: NgelarasViewModel = NgelarasViewModel()
+    viewModel: NgelarasViewModel = NgelarasViewModel(),
+    activityNavigator: Navigator
 ) {
     val navigator = rememberNavigator()
 
@@ -60,7 +59,7 @@ fun NgelarasNav(
         }
 
         scene(route = NgelarasRoute.NgelarasGamelanPage.route) {
-
+            viewModel.navigateToLandscapeNavigator(activityNavigator)
         }
     }
 }

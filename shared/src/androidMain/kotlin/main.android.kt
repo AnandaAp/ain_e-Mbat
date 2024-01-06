@@ -1,13 +1,17 @@
 import androidx.compose.runtime.Composable
 import di.RuntimeCache
+import util.Navigator
 import viewmodel.NgelarasViewModel
 
 actual fun getPlatformName(): String = "Android"
+actual fun navigateToLanscapeUI() {}
 
 @Composable fun MainView(
     cache: RuntimeCache = RuntimeCache,
-    ngelarasViewModel: NgelarasViewModel = NgelarasViewModel()
+    ngelarasViewModel: NgelarasViewModel = NgelarasViewModel(),
+    navigator: Navigator
 ) = MobileApp(
     cache = cache,
-    ngelarasViewModel = ngelarasViewModel
+    ngelarasViewModel = ngelarasViewModel,
+    navigator = navigator
 )

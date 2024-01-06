@@ -97,3 +97,7 @@ fun Modifier.shimmerLoadingAnimation(
         }
     }
 }
+
+expect interface Navigator {
+    fun navigate(tag: String)
+}

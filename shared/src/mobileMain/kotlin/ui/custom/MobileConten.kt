@@ -6,6 +6,7 @@ import androidx.compose.runtime.Composable
 import constants.BottomNavigation
 import navigation.NgelarasNav
 import ui.splash.DummyDashboardUI
+import util.Navigator
 import viewmodel.BaseViewModel
 import viewmodel.NgelarasViewModel
 
@@ -13,9 +14,10 @@ import viewmodel.NgelarasViewModel
 fun MobileContent(
     padding: PaddingValues,
     selectedScreen: String,
-    vararg viewModel: BaseViewModel
+    vararg viewModel: BaseViewModel,
+    navigator: Navigator
 ) {
-    var ngelarasViewModel = NgelarasViewModel()
+    var ngelarasViewModel: NgelarasViewModel? = null
     if (viewModel.isNotEmpty()) {
         viewModel.forEach {
             if (it is NgelarasViewModel) {
@@ -26,11 +28,14 @@ fun MobileContent(
 
     AnimatedContent(selectedScreen) { screen ->
         when (screen) {
-            BottomNavigation.ngelaras -> NgelarasNav(
-                padding = padding,
-                selectedScreen = screen,
-                viewModel = ngelarasViewModel
-            )
+            BottomNavigation.ngelaras -> ngelarasViewModel?.let {
+                NgelarasNav(
+                    padding = padding,
+                    selectedScreen = screen,
+                    viewModel = it,
+                    activityNavigator = navigator
+                )
+            }
             else -> DummyDashboardUI(padding = padding, selectedScreen = screen)
         }
     }

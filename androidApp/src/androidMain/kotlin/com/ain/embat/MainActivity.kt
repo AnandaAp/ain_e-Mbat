@@ -8,21 +8,23 @@ import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ain.embat.base.BaseActivity
 import com.ain.embat.ui.theme.Material3AinEmbatTheme
+import com.ain.embat.utils.AndroidNavigator
 import constants.AppConstant
 import constants.AppConstant.SHADY
 import constants.Characters.EMPTY
 import constants.ExceptionConstant
 import constants.FlagsConstant
 import constants.RuntimeCacheConstant.APP_PRODUCT
-import util.isNotNullOrEmpty
 import models.Product
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import timber.log.Timber
 import ui.splash.SplashScreen
+import util.isNotNullOrEmpty
 import viewmodel.NgelarasViewModel
 import viewmodel.ProductViewModel
 import viewmodel.SystemViewModel
@@ -95,13 +97,22 @@ class MainActivity : BaseActivity() {
 
     @Composable
     private fun RenderView() {
+        val context = LocalContext.current
         Crossfade(
             targetState = _product.type,
             label = TAG!!
         ) { productType ->
             when (productType) {
-                AppConstant.Type.ANDROID_ONLY -> MainView(runtimeCache, ngelarasViewModel)
-                AppConstant.Type.FULL_TYPE -> MainView(runtimeCache, ngelarasViewModel)
+                AppConstant.Type.ANDROID_ONLY -> MainView(
+                    runtimeCache,
+                    ngelarasViewModel,
+                    AndroidNavigator(context = context)
+                )
+                AppConstant.Type.FULL_TYPE -> MainView(
+                    runtimeCache,
+                    ngelarasViewModel,
+                    AndroidNavigator(context = context)
+                )
                 AppConstant.Type.IOS_ONLY -> SplashScreen()
                 else -> SplashScreen()
             }
@@ -133,7 +144,8 @@ class MainActivity : BaseActivity() {
 @Preview
 @Composable
 fun AinPreview() {
+    val context = LocalContext.current
     Material3AinEmbatTheme {
-        MainView()
+        MainView(navigator = AndroidNavigator(context = context))
     }
 }

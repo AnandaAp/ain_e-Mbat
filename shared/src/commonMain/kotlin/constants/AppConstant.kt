@@ -91,3 +91,9 @@ object DefaultViewModel {
     const val DEFAULT_KEY_VALUE = 19280081
     const val DEFAULT_SAVED_VALUE_KEY = "DEf@ul7 54v3d v@Lu3"
 }
+
+object DefaultTensorFlow {
+    const val BYTE_OUTPUT_ID = 683
+    const val WAV_ID = 233
+    const val FRAME_SIZE = 80
+}

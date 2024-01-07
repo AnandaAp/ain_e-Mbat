@@ -35,6 +35,14 @@ precompose = "1.5.10"
 timber = "4.7.1"
 skiko-awt-runtime-windows-x64 = "0.7.85.4"
 google-generativeai = "0.1.2"
+moko-permission = "0.17.0"
+moko-tensorflow = "0.2.1"
+moko-resource = "0.23.0"
+google-tensorflow = "2.2.0"
+google-tensorflow-service = "0.4.2.1"
+google-tensorflow-gpu = "16.1.0"
+google-tensorflow-java = "16.0.1"
+google-tensorflow-audio = "0.4.4"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
@@ -93,10 +101,27 @@ precompose-viewmodel = { group = "moe.tlaster", name = "precompose-viewmodel", v
 precompose-koin = { group = "moe.tlaster", name = "precompose-koin", version.ref = "precompose" }
 google-generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "google-generativeai" }
 
+moko-permission-compose = { group = "dev.icerock.moko", name = "permissions-compose", version.ref = "moko-permission" }
+moko-permission-common = { group = "dev.icerock.moko", name = "permissions", version.ref = "moko-permission" }
+moko-test-permission = { group = "dev.icerock.moko", name = "permissions-test", version.ref = "moko-permission" }
+moko-tensorflow = { group = "dev.icerock.moko", name = "tensorflow", version.ref = "moko-tensorflow"  }
+moko-resource-common = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-resource" }
+moko-resource-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-resource" }
+moko-test-resource = { group = "dev.icerock.moko", name = "resources-test", version.ref = "moko-resource" }
+
+google-tensorflow-core = { group = "org.tensorflow", name = "tensorflow-lite", version.ref = "google-tensorflow" }
+google-tensorflow-service = { group = "org.tensorflow", name = "tensorflow-lite-task-audio-play-services", version.ref = "google-tensorflow-service" }
+google-tensorflow-audio = { module = "org.tensorflow:tensorflow-lite-task-audio", version.ref = "google-tensorflow-audio" }
+google-tensorflow-gpu = { group = "com.google.android.gms", name = "play-services-tflite-gpu", version.ref = "google-tensorflow-gpu" }
+google-tensorflow-java = { group = "com.google.android.gms", name = "play-services-tflite-java", version.ref = "google-tensorflow-java" }
+google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-select-tf-ops", version.ref = "google-tensorflow" }
+
+
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 osdetector = { id = "com.google.gradle.osdetector-gradle-plugin", version.ref = "gradle-osdetector" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinx-ksp" }
+moko-resource = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resource" }
 
 [bundles]
 android-compose = [
@@ -136,8 +161,26 @@ compose-test = [
     "compose-test-ui-tooling"
 ]
 
+moko = [
+    "moko-permission-compose",
+    "moko-resource-common",
+    "moko-resource-compose"
+]
+
+moko-test = [
+    "moko-test-permission",
+    "moko-test-resource"
+]
+
 precompose = [
     "precompose-core",
     "precompose-viewmodel",
     "precompose-koin"
+]
+
+tensorflow = [
+    "google-tensorflow-gpu",
+    "google-tensorflow-java",
+    "google-tensorflow-service",
+    "google-tensorflow-audio"
 ]

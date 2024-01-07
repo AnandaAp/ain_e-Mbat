@@ -1,13 +1,32 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     alias(libs.plugins.ksp)
+    alias(libs.plugins.moko.resource)
+    id("dev.icerock.mobile.multiplatform.ios-framework")
+    id("dev.icerock.mobile.multiplatform.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("kotlin-parcelize")
 }
 
 kotlin {
+    targets
+        .filterIsInstance<KotlinNativeTarget>()
+        .flatMap { it.binaries }
+        .filterIsInstance<Framework>()
+        .forEach { framework ->
+            framework.linkerOpts (
+                project.file("../ios-app/Pods/TensorFlowLiteC/Frameworks").path.let { "-F$it" },
+                "-framework",
+                "TensorFlowLiteC"
+            )
+        }
+
     jvm()
     androidTarget()
     applyDefaultHierarchyTemplate()
@@ -21,6 +40,11 @@ kotlin {
             isStatic = true
             binaryOption("bundleId", "com.ain.embat")
         }
+//        iosTarget.binaries.configureEach {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
+//            }
+//        }
     }
 
     secrets {
@@ -58,15 +82,23 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.logging.jvm)
-                api((libs.google.generativeai))
+                api(libs.google.generativeai)
             }
         }
 
         val mobileMain by creating {
             dependsOn(commonMain.get())
             dependencies {
+                implementation(libs.bundles.moko)
                 implementation(libs.shared.firebase.firestore)
                 implementation(libs.shared.firebase.common)
+            }
+        }
+
+        val mobileTest by creating {
+            dependsOn(mobileMain)
+            dependencies {
+                implementation(libs.bundles.moko.test)
             }
         }
 
@@ -133,6 +165,18 @@ kotlin {
                 implementation(compose.foundation)
             }
         }
+
+//        val iosSimulatorArm64Main by getting {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
+//            }
+//        }
+//
+//        val iosSimulatorArm64Test by getting {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
+//            }
+//        }
     }
 }
 
@@ -170,4 +214,10 @@ android {
 
 ksp {
     arg("KOIN_CONFIG_CHECK","true")
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "library"
+    multiplatformResourcesSourceSet = "mobileMain"
+    disableStaticFrameworkWarning = true
 }

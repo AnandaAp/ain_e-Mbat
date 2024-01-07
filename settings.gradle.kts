@@ -25,6 +25,8 @@ pluginManagement {
         id("com.android.library").version(agpVersion)
         id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin").version("2.0.1")
         id("org.jetbrains.compose").version(composeVersion)
+        id("dev.icerock.mobile.multiplatform.ios-framework").version("0.14.2")
+        id("dev.icerock.mobile.multiplatform.cocoapods").version("0.14.2")
     }
 }
 

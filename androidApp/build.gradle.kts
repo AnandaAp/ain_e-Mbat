@@ -3,6 +3,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.compose")
     id("com.google.gms.google-services")
+    id("kotlin-parcelize")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
     alias(libs.plugins.ksp)
 }
@@ -13,7 +14,7 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(project(":shared"))
-//                implementation(libs.google.generativeai)
+                api(libs.bundles.tensorflow)
             }
         }
     }
@@ -89,10 +90,14 @@ android {
             isShrinkResources = true
             proguardFiles (getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
             signingConfig = signingConfigs.getByName("uat")
+            initWith (getByName("release"))
+            matchingFallbacks.add("release")
         }
         debug {
             isDebuggable = true
             proguardFiles (getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro")
+            initWith (getByName("debug"))
+            matchingFallbacks.add("debug")
         }
     }
 }

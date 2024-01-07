@@ -14,6 +14,9 @@ kotlin {
     }
     sourceSets {
         jvmMain {
+            configurations.all {
+                exclude(group = "dev.icerock.moko")
+            }
             dependencies {
                 implementation(project(":shared"))
                 implementation(compose.desktop.currentOs)

@@ -16,6 +16,7 @@ object AppConstant {
     const val BOTTOM_NAV_LIST = "Bottom_Nav_List"
     const val DEFAULT_STRING_VALUE = Characters.EMPTY
     const val DEFAULT_GAMELAN_VALUE = "Gamelan Doe"
+    const val DEFAULT_NUMBER_OF_RECORD = 1
     const val NAME = "name"
     const val UNIQUE = "unique"
     const val LIST_OF_GAMELAN_TOP_TITLE = "Daftar Gamelan Dari\n"
@@ -96,4 +97,9 @@ object DefaultTensorFlow {
     const val BYTE_OUTPUT_ID = 683
     const val WAV_ID = 233
     const val FRAME_SIZE = 80
+}
+
+object ResourceDefault {
+    const val DEFAULT_RECORD_ICON_CONTENT_DESCRIPTION = "Record The sound"
+    const val DEFAULT_RECORD_TITLE = "Start Recording The Gamelan"
 }

@@ -11,6 +11,7 @@ import android.os.Environment
 import android.os.Parcel
 import androidx.core.content.ContextCompat
 import com.google.android.gms.common.internal.safeparcel.SafeParcelWriter.writeParcel
+import constants.AppConstant
 import constants.DefaultTensorFlow
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
@@ -25,18 +26,20 @@ import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
 
+@SuppressLint("MissingPermission")
 class TensorFlowModeler(
     context: Context,
-    private val key: String,
-    numberRecordings: Int
+    private val key: String = AppConstant.DEFAULT_STRING_VALUE,
+    numberRecordings: Int = AppConstant.DEFAULT_NUMBER_OF_RECORD
 ): KoinComponent {
     private val AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_RECOGNITION
+    private val tag = "AinRecord"
     private val SAMPLE_RATE = 16000
     private val CHANNEL_MASK = AudioFormat.CHANNEL_IN_MONO
     private val ENCODING = AudioFormat.ENCODING_PCM_16BIT
     private val BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_MASK, ENCODING)
     private var buffer = ShortArray(BUFFER_SIZE)
-    var bufferForInference: ArrayList<Short> = arrayListOf()
+    private var bufferForInference: ArrayList<Short> = arrayListOf()
     private val AUDIO_FORMAT =
         AudioFormat.Builder()
             .setEncoding(ENCODING)
@@ -61,15 +64,10 @@ class TensorFlowModeler(
         println("CoroutineExceptionHandler got $exception")
     }
 
-    @SuppressLint("MissingPermission")
-    val recorder = AudioRecord
-        .Builder()
-        .setAudioSource(AUDIO_SOURCE)
-        .setAudioFormat(AUDIO_FORMAT)
-        .setBufferSizeInBytes(BUFFER_SIZE)
-        .build()
+//    @get:SuppressLint("MissingPermission")
+    private lateinit var recorder: AudioRecord
 
-    val isPermissionGranted =  ContextCompat
+    private val isPermissionGranted =  ContextCompat
         .checkSelfPermission(
             context,
             Manifest.permission.RECORD_AUDIO
@@ -77,6 +75,13 @@ class TensorFlowModeler(
 
     suspend fun startRecording() {
         if (isPermissionGranted) {
+            Timber.tag(tag).e("start the recording")
+            recorder = AudioRecord
+                .Builder()
+                .setAudioSource(AUDIO_SOURCE)
+                .setAudioFormat(AUDIO_FORMAT)
+                .setBufferSizeInBytes(BUFFER_SIZE)
+                .build()
             recorder.startRecording()
             isRecording = coroutine.async {
                 readAudio.run()
@@ -84,8 +89,9 @@ class TensorFlowModeler(
             }.await()
         }
     }
-    fun stopRecording(): ByteArrayOutputStream {
+    suspend fun stopRecording(): ByteArrayOutputStream {
         if (recorder != null && recorder.state == AudioRecord.STATE_INITIALIZED) {
+            Timber.tag(tag).e("stop the recording")
             isRecording = false
             recorder.stop()
             recorder.release()

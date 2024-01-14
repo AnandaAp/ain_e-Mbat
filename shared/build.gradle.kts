@@ -92,6 +92,7 @@ kotlin {
                 implementation(libs.bundles.moko)
                 implementation(libs.shared.firebase.firestore)
                 implementation(libs.shared.firebase.common)
+                implementation(libs.compose.ui.tooling.preview)
             }
         }
 

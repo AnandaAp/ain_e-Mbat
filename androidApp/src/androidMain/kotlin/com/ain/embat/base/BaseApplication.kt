@@ -2,6 +2,7 @@ package com.ain.embat.base
 
 import android.app.Application
 import android.content.Context
+import com.ain.embat.di.nativeAndroidKoinModule
 import com.google.firebase.firestore.LocalCacheSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.memoryCacheSettings
@@ -29,10 +30,15 @@ class BaseApplication: Application(), KoinComponent, LocalCacheSettings {
         appContext = applicationContext
         Security.insertProviderAt(Conscrypt.newProvider(), 1)
         Timber.plant(DebugTree())
-        initMobileKoin(appDeclaration = {
-            androidLogger()
-            androidContext(this@BaseApplication)
-        }, additionalModules = androidKoinModule())
+        Timber.asTree().e("Ain Embat Started")
+        initMobileKoin(
+            androidKoinModule(),
+            nativeAndroidKoinModule(appContext),
+            appDeclaration = {
+                androidLogger()
+                androidContext(this@BaseApplication)
+            }
+        )
         val settings = firestoreSettings {
             // Use memory cache
             setLocalCacheSettings(memoryCacheSettings {})

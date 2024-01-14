@@ -13,4 +13,4 @@ actual interface GeminiInterface {
     actual val apiKey: String
 }
 
-val permission = PermissionsController
+val permission = PermissionsController::class

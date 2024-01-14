@@ -15,6 +15,7 @@ kotlin {
             dependencies {
                 implementation(project(":shared"))
                 api(libs.bundles.tensorflow)
+                api(libs.compose.ui.tooling.preview)
             }
         }
     }

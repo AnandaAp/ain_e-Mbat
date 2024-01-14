@@ -20,12 +20,19 @@ fun mobileModule() = module {
 }
 
 fun initMobileKoin(
-    additionalModules: Module = Module(),
+    vararg additionalModules: Module = arrayOf(Module()),
     appDeclaration: KoinAppDeclaration = { }
 ): KoinApplication {
     return startKoin {
         appDeclaration()
-        modules(mobileModule(), additionalModules)
+        val modules = mutableListOf<Module>()
+        if (additionalModules.isNotEmpty()) {
+            additionalModules.forEach { module ->
+                modules.add(module)
+            }
+        }
+        modules.add(mobileModule())
+        modules(modules)
     }
 }
 

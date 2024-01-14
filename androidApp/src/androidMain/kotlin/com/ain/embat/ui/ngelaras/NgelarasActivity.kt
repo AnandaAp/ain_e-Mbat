@@ -4,8 +4,9 @@ import android.app.Activity
 import android.content.pm.ActivityInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import com.ain.embat.base.BaseActivity
-import ui.ngelaras.BaseLandscapeNgelaras
+import com.ain.embat.navigation.NgelarasRecordNav
 
 class NgelarasActivity: BaseActivity() {
 
@@ -17,8 +18,8 @@ class NgelarasActivity: BaseActivity() {
     @Composable
     override fun InitiateUI() {
         super.InitiateUI()
-        BaseLandscapeNgelaras()
         hideSystemUI()
+        NgelarasRecordNav()
     }
 
     @Composable
@@ -26,4 +27,10 @@ class NgelarasActivity: BaseActivity() {
         val activity = LocalContext.current as Activity
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
     }
+}
+
+@Preview
+@Composable
+fun PreviewNgelarasRecord() {
+    NgelarasRecordNav()
 }

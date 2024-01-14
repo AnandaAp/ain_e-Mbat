@@ -16,7 +16,7 @@ fun NgelarasRecordNav() {
     val viewModel: NgelarasRecordViewModel by inject(clazz = NgelarasRecordViewModel::class.java)
     var recordButtonState by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission()
+        ActivityResultContracts.RequestMultiplePermissions()
     ) { isGranted ->
 
     }

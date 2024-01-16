@@ -1,19 +1,21 @@
 package com.ain.embat.navigation
 
+import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.ain.embat.viewmodel.NgelarasRecordViewModel
-import org.koin.java.KoinJavaComponent.inject
 import ui.ngelaras.BaseLandscapeNgelaras
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
-fun NgelarasRecordNav() {
-    val viewModel: NgelarasRecordViewModel by inject(clazz = NgelarasRecordViewModel::class.java)
+fun NgelarasRecordNav(viewModel: NgelarasRecordViewModel) {
+//    val viewModel: NgelarasRecordViewModel by inject(clazz = NgelarasRecordViewModel::class.java)
     var recordButtonState by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()

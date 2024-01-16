@@ -32,10 +32,10 @@ class SingRecorder(
     private val key: String = AppConstant.DEFAULT_STRING_VALUE,
     numberRecordings: Int = AppConstant.DEFAULT_NUMBER_OF_RECORD
 ): KoinComponent {
-    private val AUDIO_SOURCE = MediaRecorder.AudioSource.VOICE_RECOGNITION
+    private val AUDIO_SOURCE = MediaRecorder.AudioSource.MIC
     private val tag = "AinRecord"
     private val SAMPLE_RATE = 16000
-    private val CHANNEL_MASK = AudioFormat.CHANNEL_IN_MONO
+    private val CHANNEL_MASK = AudioFormat.CHANNEL_IN_STEREO
     private val ENCODING = AudioFormat.ENCODING_PCM_16BIT
     private val BUFFER_SIZE = AudioRecord.getMinBufferSize(SAMPLE_RATE, CHANNEL_MASK, ENCODING)
     private var buffer = ShortArray(BUFFER_SIZE)
@@ -83,10 +83,12 @@ class SingRecorder(
                 .setBufferSizeInBytes(BUFFER_SIZE)
                 .build()
             recorder.startRecording()
-            isRecording = coroutine.async {
+            isRecording = true
+            val read = coroutine.async {
                 readAudio.run()
-                return@async true
-            }.await()
+                return@async
+            }
+            read.await()
         }
     }
     suspend fun stopRecording(): ByteArrayOutputStream {
@@ -107,7 +109,7 @@ class SingRecorder(
     private val readAudio = Runnable {
         var readBytes: Int
         while (isRecording) {
-            readBytes = recorder!!.read(buffer, 0, BUFFER_SIZE)
+            readBytes = recorder.read(buffer, 0, BUFFER_SIZE)
 
             //Higher volume of microphone
             //https://stackoverflow.com/questions/25441166/how-to-adjust-microphone-sensitivity-while-recording-audio-in-android
@@ -117,9 +119,11 @@ class SingRecorder(
                         .toInt()
                         .coerceAtMost(Short.MAX_VALUE.toInt())
                         .toShort()
+                    Timber.tag("AinBuffer").i("buffer byte, index $i: ${buffer[i]}")
                 }
             }
             if (readBytes != AudioRecord.ERROR_INVALID_OPERATION) {
+                Timber.tag("AinBuffer").i("buffer bytes, operation is not invalid")
                 for (s in buffer) {
 
                     // Add all values to arraylist
@@ -267,15 +271,14 @@ class SingRecorder(
         try {
             try {
                 Timber.i("Check if the wav file exist")
-                stream = FileOutputStream(
-                    Environment.getExternalStorageDirectory().toString() +
-                            "/Recordings/Pitch Estimator/soloupis.wav", false
-                )
+                val name = Environment.getExternalStorageDirectory().toString() +
+                        "/Recordings/Pitch Estimator/soloupis.wav"
+                Timber.i("wav path: $name")
+                stream = FileOutputStream(name, false)
             } catch (e: FileNotFoundException) {
                 e.printStackTrace()
             }
             try {
-                Timber.i("the wav file is not exist, try to write it")
                 stream?.write(wav)
             } catch (e: Exception) {
                 Timber.tag("PERMISSIONS").e("NOT ABLE TO WRITE .WAV TO SDCARD")

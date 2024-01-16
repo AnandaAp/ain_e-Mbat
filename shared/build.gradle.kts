@@ -82,6 +82,8 @@ kotlin {
                 implementation(libs.kotlinx.serialization.json)
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.logging.jvm)
+                implementation ("be.tarsos.dsp:core:2.5")
+                implementation ("be.tarsos.dsp:jvm:2.5")
                 api(libs.google.generativeai)
             }
         }
@@ -92,7 +94,6 @@ kotlin {
                 implementation(libs.bundles.moko)
                 implementation(libs.shared.firebase.firestore)
                 implementation(libs.shared.firebase.common)
-                implementation(libs.compose.ui.tooling.preview)
             }
         }
 
@@ -121,6 +122,10 @@ kotlin {
                 api(libs.conscrypt.android)
                 api(libs.timber)
                 api(libs.android.fragment)
+                api(libs.bundles.tensorflow)
+                api("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.4")
+                api("com.android.tools.lint:lint-api:31.2.1")
+                api("com.android.tools.lint:lint-checks:31.2.1")
             }
         }
 

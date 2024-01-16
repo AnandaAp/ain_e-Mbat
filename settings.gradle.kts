@@ -1,3 +1,5 @@
+import java.net.URI
+
 rootProject.name = "ain E-MBAT"
 
 include(":androidApp")
@@ -39,5 +41,12 @@ dependencyResolutionManagement {
         mavenCentral()
         google()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven {  // Only for snapshot artifacts
+            name = "ossrh-snapshot"
+            url = URI("https://oss.sonatype.org/content/repositories/snapshots")
+        }
+        maven(url = "https://mvn.0110.be/releases") {
+            name = "TarsosDSP repository"
+        }
     }
 }

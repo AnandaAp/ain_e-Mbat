@@ -1,10 +1,12 @@
 package com.ain.embat.utils
 
 import android.content.Context
-import com.google.android.gms.tflite.gpu.GpuDelegate
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 import org.tensorflow.lite.InterpreterApi
+import org.tensorflow.lite.gpu.GpuDelegateFactory
+import org.tensorflow.lite.task.audio.classifier.AudioClassifier.AudioClassifierOptions
+import org.tensorflow.lite.task.core.BaseOptions
 import timber.log.Timber
 import java.io.FileInputStream
 import java.io.IOException
@@ -20,16 +22,28 @@ class PitchModelExecutor(
     useGpu: Boolean = true
 ): KoinComponent {
     private val context: Context by inject()
-    private var gpuDelegate: GpuDelegate = GpuDelegate()
     private var numberThreads = 4
-    private lateinit var interpreter: InterpreterApi
     private var predictTime = 0L
-    private val PITCH_MODEL = "lite-model_spice_1.tflite"
+    private val PITCH_MODEL = "tflite_audio_model.tflite"
     private val PT_OFFSET = 25.58
     private val FMIN = 10.0
     private val BINS_PER_OCTAVE = 12.0
     private val C0 = 16.351597831287414
     private val PT_SLOPE = 63.07
+    private val interpreter = if (useGpu) {
+        getInterpreter(context, PITCH_MODEL, true)
+    } else {
+        getInterpreter(context, PITCH_MODEL, false)
+    }
+    private var classifierOption: AudioClassifierOptions.Builder = if (useGpu) {
+        AudioClassifierOptions
+            .builder()
+            .setBaseOptions(BaseOptions.builder().useGpu().build())
+    } else {
+        AudioClassifierOptions
+            .builder()
+            .setBaseOptions(BaseOptions.builder().useNnapi().build())
+    }
 
     val noteNames = mapOf(
         // musical notes
@@ -47,13 +61,6 @@ class PitchModelExecutor(
         10 to "A#",
         11 to "B"
     )
-    init {
-        interpreter = if (useGpu) {
-            getInterpreter(context, PITCH_MODEL, true)
-        } else {
-            getInterpreter(context, PITCH_MODEL, false)
-        }
-    }
 
     @Throws(IOException::class)
     private fun loadModelFile(context: Context, modelFile: String): MappedByteBuffer {
@@ -74,11 +81,16 @@ class PitchModelExecutor(
         useGpu: Boolean
     ): InterpreterApi {
         val tfliteOptions = InterpreterApi.Options()
-        if (useGpu) {
-            val gpuDelegate = GpuDelegate()
-            tfliteOptions.addDelegate(gpuDelegate)
+        tfliteOptions.setRuntime(InterpreterApi.Options.TfLiteRuntime.FROM_SYSTEM_ONLY)
+        try {
+            if (useGpu) {
+                tfliteOptions.addDelegateFactory(GpuDelegateFactory())
+            }
+        } catch (e: Exception) {
+            println(e)
         }
-        tfliteOptions.setNumThreads(2)
+        tfliteOptions.setNumThreads(numberThreads)
+
         return InterpreterApi.create(loadModelFile(context, modelName), tfliteOptions)
     }
 
@@ -87,14 +99,13 @@ class PitchModelExecutor(
         predictTime = System.currentTimeMillis()
         val inputSize = floatsInput.size // ~2 seconds of sound
         var outputSize = 0
-        when (inputSize) {
+        outputSize = when (inputSize) {
             // 16.000 * 2 seconds recording
-            32000 -> outputSize = ceil(inputSize / 512.0).toInt()
-            else -> outputSize = (ceil(inputSize / 512.0) + 1).toInt()
+            32000 -> ceil(inputSize / 512.0).toInt()
+            else -> (ceil(inputSize / 512.0) + 1).toInt()
         }
-        val inputValues = floatsInput//FloatArray(inputSize)
 
-        val inputs = arrayOf<Any>(inputValues)
+        val inputs = arrayOf<Any>(floatsInput)
         val outputs = HashMap<Int, Any>()
 
         val pitches = FloatArray(outputSize)
@@ -143,7 +154,7 @@ class PitchModelExecutor(
         }
 
         val idealOffset = arrayForOffset.average()
-        //Timber.i("OFFSETS_AVERAGE", idealOffset.toString())
+        Timber.i("OFFSETS_AVERAGE\n%s", idealOffset.toString())
 
         // We can now use some heuristics to try and estimate the most likely sequence of notes that were sung.
         // The ideal offset computed above is one ingredient - but we also need to know the speed

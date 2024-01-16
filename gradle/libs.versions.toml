@@ -32,6 +32,8 @@ okhttp = "4.11.0"
 room-compiler = "2.6.1"
 shared-firebase = "1.8.1"
 precompose = "1.5.10"
+tensorflow-lite-gpu-api = "2.14.0"
+tensorflow-lite-select-tf-ops = "0.1.100"
 timber = "4.7.1"
 skiko-awt-runtime-windows-x64 = "0.7.85.4"
 google-generativeai = "0.1.2"
@@ -39,6 +41,7 @@ moko-permission = "0.17.0"
 moko-tensorflow = "0.2.1"
 moko-resource = "0.23.0"
 google-tensorflow = "2.2.0"
+google-tensorflow-ops = "2.14.0"
 google-tensorflow-service = "0.4.2.1"
 google-tensorflow-gpu = "16.2.0"
 google-tensorflow-java = "16.1.0"
@@ -83,7 +86,9 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-co
 shared-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "shared-firebase"}
 shared-firebase-common = { group = "dev.gitlive", name = "firebase-common", version.ref = "shared-firebase"}
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version = "20.4.2" }
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.6.2" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.7.0" }
+tensorflow-lite-gpu-api = { module = "org.tensorflow:tensorflow-lite-gpu-api", version.ref = "tensorflow-lite-gpu-api" }
+tensorflow-lite-select-tf-ops-v01100 = { module = "org.tensorflow:tensorflow-lite-select-tf-ops", version.ref = "tensorflow-lite-select-tf-ops" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
@@ -114,7 +119,7 @@ google-tensorflow-service = { group = "org.tensorflow", name = "tensorflow-lite-
 google-tensorflow-audio = { module = "org.tensorflow:tensorflow-lite-task-audio", version.ref = "google-tensorflow-audio" }
 google-tensorflow-gpu = { group = "com.google.android.gms", name = "play-services-tflite-gpu", version.ref = "google-tensorflow-gpu" }
 google-tensorflow-java = { group = "com.google.android.gms", name = "play-services-tflite-java", version.ref = "google-tensorflow-java" }
-google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-select-tf-ops", version.ref = "google-tensorflow" }
+google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-select-tf-ops", version.ref = "google-tensorflow-ops" }
 
 
 [plugins]
@@ -182,5 +187,6 @@ tensorflow = [
     "google-tensorflow-gpu",
     "google-tensorflow-java",
     "google-tensorflow-service",
-    "google-tensorflow-audio"
+    "google-tensorflow-audio",
+    "google-tensorflow-ops"
 ]

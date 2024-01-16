@@ -14,8 +14,9 @@ kotlin {
         androidMain {
             dependencies {
                 implementation(project(":shared"))
-                api(libs.bundles.tensorflow)
+//                api(libs.bundles.tensorflow)
                 api(libs.compose.ui.tooling.preview)
+//                api(libs.tensorflow.lite.select.tf.ops.v01100)
             }
         }
     }
@@ -41,6 +42,12 @@ android {
         targetSdk = (findProperty("android.targetSdk") as String).toInt()
         versionCode = 1
         versionName = "1.0"
+        ndk {
+            abiFilters.add("armeabi-v7a")
+            abiFilters.add("arm64-v8a")
+            abiFilters.add("x86_64")
+            abiFilters.add("x86")
+        }
     }
 
     lint {
@@ -100,5 +107,9 @@ android {
             initWith (getByName("debug"))
             matchingFallbacks.add("debug")
         }
+    }
+
+    androidResources {
+        noCompress.add("tflite")
     }
 }

@@ -220,7 +220,7 @@ class Yin(private val sampleRate: Float) {
         println("buffer step size: $bufferStepSize")
 
         //read full buffer
-        var hasMoreBytes = record.read(instance!!.inputBuffer, 0, instance!!.bufferSize) !== -1
+        var hasMoreBytes = record.read(instance!!.inputBuffer, 0, instance!!.bufferSize) != -1
         println("has more bytes: $hasMoreBytes")
         floatsProcessed += instance!!.inputBuffer.size
         println("float processed: $floatsProcessed")
@@ -232,7 +232,7 @@ class Yin(private val sampleRate: Float) {
             for (i in 0 until bufferStepSize) {
                 instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]
             }
-            hasMoreBytes = record.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) !== -1
+            hasMoreBytes = record.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) != -1
             floatsProcessed += bufferStepSize.toLong()
         }
     }

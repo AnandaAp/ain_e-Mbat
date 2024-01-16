@@ -124,8 +124,6 @@ kotlin {
                 api(libs.android.fragment)
                 api(libs.bundles.tensorflow)
                 api("org.tensorflow:tensorflow-lite-gpu-delegate-plugin:0.4.4")
-                api("com.android.tools.lint:lint-api:31.2.1")
-                api("com.android.tools.lint:lint-checks:31.2.1")
             }
         }
 

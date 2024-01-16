@@ -6,15 +6,6 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import java.io.IOException
 
-
-//import java.io.File;
-//import java.io.IOException;
-//
-//import javax.sound.sampled.AudioFormat;
-//import javax.sound.sampled.AudioInputStream;
-//import javax.sound.sampled.AudioSystem;
-//import javax.sound.sampled.UnsupportedAudioFileException;
-//
 /**
  * @author Joren Six
  * An implementation of the YIN pitch tracking algorithm.
@@ -39,10 +30,6 @@ class Yin(private val sampleRate: Float) {
     var isRunning = false
 
     /**
-     * Used to start and stop real time annotations.
-     */
-    //	private static Yin yinInstance;
-    /**
      * The YIN threshold value (see paper)
      */
     private val threshold = 0.15
@@ -61,29 +48,29 @@ class Yin(private val sampleRate: Float) {
      * The buffer that stores the calculated values.
      * It is exactly half the size of the input buffer.
      */
-    private lateinit var yinBuffer: FloatArray
+    private lateinit var buffer: FloatArray
 
     /**
      * Implements the difference function as described
      * in step 2 of the YIN paper
      */
     private fun difference() {
-        var j: Int
+        var innerIndex: Int
         var delta: Float
-        var tau = 0
-        while (tau < yinBuffer.size) {
-            yinBuffer[tau] = 0f
-            tau++
+        var index = 0
+        while (index < buffer.size) {
+            buffer[index] = 0f
+            index++
         }
-        tau = 1
-        while (tau < yinBuffer.size) {
-            j = 0
-            while (j < yinBuffer.size) {
-                delta = inputBuffer[j].toFloat() - inputBuffer[j + tau].toFloat()
-                yinBuffer[tau] += delta * delta
-                j++
+        index = 1
+        while (index < buffer.size) {
+            innerIndex = 0
+            while (innerIndex < buffer.size) {
+                delta = inputBuffer[innerIndex].toFloat() - inputBuffer[innerIndex + index].toFloat()
+                buffer[index] += delta * delta
+                innerIndex++
             }
-            tau++
+            index++
         }
     }
 
@@ -96,18 +83,18 @@ class Yin(private val sampleRate: Float) {
      *
      */
     private fun cumulativeMeanNormalizedDifference() {
-        yinBuffer[0] = 1f
+        buffer[0] = 1f
         //Very small optimization in comparison with AUBIO
         //start the running sum with the correct value:
         //the first value of the yinBuffer
-        var runningSum = yinBuffer[1]
+        var runningSum = buffer[1]
         //yinBuffer[1] is always 1
-        yinBuffer[1] = 1f
+        buffer[1] = 1f
         //now start at tau = 2
         var tau = 2
-        while (tau < yinBuffer.size) {
-            runningSum += yinBuffer[tau]
-            yinBuffer[tau] *= tau / runningSum
+        while (tau < buffer.size) {
+            runningSum += buffer[tau]
+            buffer[tau] *= tau / runningSum
             tau++
         }
     }
@@ -119,10 +106,10 @@ class Yin(private val sampleRate: Float) {
         //Uses another loop construct
         //than the AUBIO implementation
         var tau = 1
-        while (tau < yinBuffer.size) {
-            if (yinBuffer[tau] < threshold) {
-                while (tau + 1 < yinBuffer.size &&
-                    yinBuffer[tau + 1] < yinBuffer[tau]
+        while (tau < buffer.size) {
+            if (buffer[tau] < threshold) {
+                while (tau + 1 < buffer.size &&
+                    buffer[tau + 1] < buffer[tau]
                 ) tau++
                 return tau
             }
@@ -145,12 +132,12 @@ class Yin(private val sampleRate: Float) {
         val s0: Float
         val s2: Float
         val x0 = if ((tauEstimate < 1)) tauEstimate else tauEstimate - 1
-        val x2 = if ((tauEstimate + 1 < yinBuffer.size)) tauEstimate + 1 else tauEstimate
-        if (x0 == tauEstimate) return if ((yinBuffer[tauEstimate] <= yinBuffer[x2])) tauEstimate.toFloat() else x2.toFloat()
-        if (x2 == tauEstimate) return if ((yinBuffer[tauEstimate] <= yinBuffer[x0])) tauEstimate.toFloat() else x0.toFloat()
-        s0 = yinBuffer[x0]
-        val s1 = yinBuffer[tauEstimate]
-        s2 = yinBuffer[x2]
+        val x2 = if ((tauEstimate + 1 < buffer.size)) tauEstimate + 1 else tauEstimate
+        if (x0 == tauEstimate) return if ((buffer[tauEstimate] <= buffer[x2])) tauEstimate.toFloat() else x2.toFloat()
+        if (x2 == tauEstimate) return if ((buffer[tauEstimate] <= buffer[x0])) tauEstimate.toFloat() else x0.toFloat()
+        s0 = buffer[x0]
+        val s1 = buffer[tauEstimate]
+        s2 = buffer[x2]
         //fixed AUBIO implementation, thanks to Karl Helgason:
         //(2.0f * s1 - s2 - s0) was incorrectly multiplied with -1
         return tauEstimate + 0.5f * (s2 - s0) / (2.0f * s1 - s2 - s0)
@@ -164,9 +151,7 @@ class Yin(private val sampleRate: Float) {
      */
     fun getPitch(aInputBuffer: ShortArray): Float {
         inputBuffer = aInputBuffer
-        yinBuffer = FloatArray(inputBuffer.size / 2)
-
-        var tauEstimate = -1
+        buffer = FloatArray(inputBuffer.size / 2)
         var pitchInHertz = -1f
 
         //step 2
@@ -176,7 +161,7 @@ class Yin(private val sampleRate: Float) {
         cumulativeMeanNormalizedDifference()
 
         //step 4
-        tauEstimate = absoluteThreshold()
+        val tauEstimate: Int = absoluteThreshold()
 
         //step 5
         if (tauEstimate != -1) {
@@ -209,106 +194,19 @@ class Yin(private val sampleRate: Float) {
          */
         fun handleDetectedPitch(time: Float, pitch: Float)
     }
-    //
-    //	/**
-    //	 * Annotate a file with pitch information.
-    //	 *
-    //	 * @param fileName
-    //	 *            the file to annotate.
-    //	 * @param detectedPitchHandler
-    //	 *            handles the pitch information.
-    //	 * @throws UnsupportedAudioFileException
-    //	 *             Currently only WAVE files with one channel (MONO) are
-    //	 *             supported.
-    //	 * @throws IOException
-    //	 *             If there is an error reading the file.
-    //	 */
-    //
-    //
-//    @Throws(UIOException::class)
-//    fun processFile(fileName: String?, detectedPitchHandler: DetectedPitchHandler?) {
-//        val ais: AudioInputStream = AudioSystem.getAudioInputStream(File(fileName))
-//        val afis: AudioFloatInputStream = AudioFloatInputStream.getInputStream(ais)
-//        Yin.processStream(afis, detectedPitchHandler)
-//    }
-    //
-    //	/**
-    //	 * Annotate an audio stream: useful for real-time pitch tracking.
-    //	 *
-    //	 * @param afis
-    //	 *            The audio stream.
-    //	 * @param detectedPitchHandler
-    //	 *            Handles the pitch information. If null then the annotated
-    //	 *            pitch information is printed to <code>System.out</code>
-    //	 * @throws UnsupportedAudioFileException
-    //	 *             Currently only WAVE streams with one channel (MONO) are
-    //	 *             supported.
-    //	 * @throws IOException
-    //	 *             If there is an error reading the stream.
-    //	 */
-    //	public static void processStream(AudioFloatInputStream afis,DetectedPitchHandler detectedPitchHandler) throws UnsupportedAudioFileException, IOException{
-    //		AudioFormat format = afis.getFormat();
-    //		float sampleRate = format.getSampleRate();
-    //		double frameSize = format.getFrameSize();
-    //		double frameRate = format.getFrameRate();
-    //		float time = 0;
-    //
-    //		//by default use the print pitch handler
-    //		if(detectedPitchHandler==null)
-    //			detectedPitchHandler = Yin.PRINT_DETECTED_PITCH_HANDLER;
-    //
-    //		//number of bytes / frameSize * frameRate gives the number of seconds
-    //		//because we use float buffers there is a factor 2: 2 bytes per float?
-    //		//Seems to be correct but a float uses 4 bytes: confused programmer is confused.
-    //		float timeCalculationDivider = (float) (frameSize * frameRate / 2);
-    //		long floatsProcessed = 0;
-    //		yinInstance = new Yin(sampleRate);
-    //		int bufferStepSize = yinInstance.bufferSize - yinInstance.overlapSize;
-    //
-    //		//read full buffer
-    //		boolean hasMoreBytes = afis.read(yinInstance.inputBuffer,0, yinInstance.bufferSize) != -1;
-    //		floatsProcessed += yinInstance.inputBuffer.length;
-    //		while(hasMoreBytes && yinInstance.running) {
-    //			float pitch = yinInstance.getPitch();
-    //			time = floatsProcessed / timeCalculationDivider;
-    //			detectedPitchHandler.handleDetectedPitch(time,pitch);
-    //			//slide buffer with predefined overlap
-    //			for(int i = 0 ; i < bufferStepSize ; i++)
-    //				yinInstance.inputBuffer[i]=yinInstance.inputBuffer[i+yinInstance.overlapSize];
-    //			hasMoreBytes = afis.read(yinInstance.inputBuffer,yinInstance.overlapSize,bufferStepSize) != -1;
-    //			floatsProcessed += bufferStepSize;
-    //		}
-    //	}
-    //
-    //	public static void stop(){
-    //		if(yinInstance!=null)
-    //			yinInstance.running = false;
-    //	}
-    //
-    //
-    //	public static DetectedPitchHandler PRINT_DETECTED_PITCH_HANDLER = new DetectedPitchHandler() {
-    //		@Override
-    //		public void handleDetectedPitch(float time, float pitch) {
-    //			System.out.println(time + "\t" + pitch);
-    //		}
-    //	};
-    //
-    //	public static void main(String... args) throws UnsupportedAudioFileException, IOException{
-    //		Yin.processFile("../Tarsos/audio/pitch_check/brass-880.wav", PRINT_DETECTED_PITCH_HANDLER);
-    //	}
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @Throws(IOException::class)
-    fun processStream(afis: AudioRecord, detectedPitchHandler: DetectedPitchHandler?) {
-        var detectedPitchHandler = detectedPitchHandler
-        val format: AudioFormat = afis.getFormat()
+    fun processStream(record: AudioRecord, detectedPitchHandler: DetectedPitchHandler?) {
+        var pitchHandler = detectedPitchHandler
+        val format: AudioFormat = record.getFormat()
         val sampleRate = format.sampleRate.toFloat()
         val frameSize: Double = format.frameSizeInBytes.toDouble()
         val frameRate: Double = format.sampleRate.toDouble()
         var time: Float
 
         //by default use the print pitch handler
-        if (detectedPitchHandler == null) detectedPitchHandler = printDetectPitchHandler
+        if (pitchHandler == null) pitchHandler = printDetectPitchHandler
 
         //number of bytes / frameSize * frameRate gives the number of seconds
         //because we use float buffers there is a factor 2: 2 bytes per float?
@@ -322,18 +220,19 @@ class Yin(private val sampleRate: Float) {
         println("buffer step size: $bufferStepSize")
 
         //read full buffer
-        var hasMoreBytes = afis.read(instance!!.inputBuffer, 0, instance!!.bufferSize) !== -1
+        var hasMoreBytes = record.read(instance!!.inputBuffer, 0, instance!!.bufferSize) !== -1
         println("has more bytes: $hasMoreBytes")
         floatsProcessed += instance!!.inputBuffer.size
         println("float processed: $floatsProcessed")
         while (hasMoreBytes && isRunning) {
             val pitch: Float = instance!!.getPitch(inputBuffer)
             time = floatsProcessed / timeCalculationDivider
-            detectedPitchHandler.handleDetectedPitch(time, pitch)
+            pitchHandler.handleDetectedPitch(time, pitch)
             //slide buffer with predefined overlap
-            for (i in 0 until bufferStepSize) instance!!.inputBuffer[i] =
-                instance!!.inputBuffer[i + instance!!.overlapSize]
-            hasMoreBytes = afis.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) !== -1
+            for (i in 0 until bufferStepSize) {
+                instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]
+            }
+            hasMoreBytes = record.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) !== -1
             floatsProcessed += bufferStepSize.toLong()
         }
     }

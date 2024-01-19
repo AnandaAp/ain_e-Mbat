@@ -67,5 +67,5 @@ object RuntimeCache {
 
     fun clear() = runtimeCache.clear()
 
-    fun get(key: String): Any? = if (key.isFoundInCache()) runtimeCache[key]!! else null
+    fun <T>get(key: String): T? = if (key.isFoundInCache()) runtimeCache[key] as T else null
 }

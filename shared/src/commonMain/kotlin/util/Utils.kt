@@ -105,3 +105,6 @@ expect interface Navigator {
 
 fun SavedStateHolder.isNull(): Boolean = this == null
 fun SavedStateHolder.isNotNull(): Boolean = !this.isNull()
+inline fun Float.rangeOf(minimumValue: Float, maximumValue: Float) = (minimumValue..maximumValue).contains(this)
+fun getMinusTolerateHertz(hertz: Float) = hertz - (hertz * 0.5f/100)
+fun getPlusTolerateHertz(hertz: Float) = hertz + (hertz * 0.5f/100)

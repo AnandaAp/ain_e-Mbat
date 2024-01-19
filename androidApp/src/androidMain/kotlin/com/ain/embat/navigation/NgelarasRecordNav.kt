@@ -10,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.ain.embat.viewmodel.NgelarasRecordViewModel
+import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import ui.ngelaras.BaseLandscapeNgelaras
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -18,12 +19,15 @@ fun NgelarasRecordNav(viewModel: NgelarasRecordViewModel) {
 //    val viewModel: NgelarasRecordViewModel by inject(clazz = NgelarasRecordViewModel::class.java)
     var recordButtonState by remember { mutableStateOf(false) }
     val launcher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestMultiplePermissions()
-    ) { isGranted ->
-
-    }
-    BaseLandscapeNgelaras(onRecordButtonClick = {
-        recordButtonState = !recordButtonState
-        viewModel.onRecordButtonClicked(launcher, recordButtonState)
-    })
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = {}
+    )
+    val pitch = viewModel.pitch.collectAsStateWithLifecycle()
+    BaseLandscapeNgelaras(
+        onRecordButtonClick = {
+            recordButtonState = !recordButtonState
+            viewModel.onRecordButtonClicked(launcher, recordButtonState)
+        },
+        pitch = pitch.value
+    )
 }

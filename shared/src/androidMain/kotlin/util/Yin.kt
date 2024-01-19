@@ -4,10 +4,14 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.plus
 import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
+import timber.log.Timber
 import java.io.IOException
 
 /**
@@ -28,7 +32,10 @@ import java.io.IOException
 // * Original implementation is here: http://tarsos.0110.be/artikels/lees/YIN_Pitch_Tracker_in_JAVA
  */
 class Yin(private val sampleRate: Float): KoinComponent {
-    protected val coroutine: CoroutineScope by inject()
+    //thread
+    private val coroutine: CoroutineScope = CoroutineScope(Dispatchers.IO) + CoroutineExceptionHandler { _, exception ->
+        println("CoroutineExceptionHandler got $exception")
+    }
     private var bufferSize = 1024
     private var overlapSize = bufferSize / 2
     var instance: Yin? = null
@@ -202,9 +209,9 @@ class Yin(private val sampleRate: Float): KoinComponent {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     @Throws(IOException::class)
-    fun processStream(record: AudioRecord, detectedPitchHandler: DetectedPitchHandler?) {
+    fun processStream(record: AudioRecord, handler: DetectedPitchHandler?, channel: Channel<MutableList<Float>> = Channel()) {
         coroutine.launch {
-            var pitchHandler = detectedPitchHandler
+            var pitchHandler = handler
             val format: AudioFormat = record.getFormat()
             val sampleRate = format.sampleRate.toFloat()
             val frameSize: Double = format.frameSizeInBytes.toDouble()
@@ -230,10 +237,23 @@ class Yin(private val sampleRate: Float): KoinComponent {
             println("has more bytes: $hasMoreBytes")
             floatsProcessed += instance!!.inputBuffer.size
             println("float processed: $floatsProcessed")
+            val hertzToSent = mutableListOf<Float>()
             while (hasMoreBytes && isRunning) {
                 val pitch: Float = instance!!.getPitch(inputBuffer)
                 time = floatsProcessed / timeCalculationDivider
                 pitchHandler.handleDetectedPitch(time, pitch)
+                if (pitch > -1.0f) {
+                    hertzToSent.add(pitch)
+                }
+                if (hertzToSent.isNotNullOrEmpty() && pitch <= -1.0f) {
+                    channel.trySend(hertzToSent)
+                    print("saved pitch:")
+                    hertzToSent.forEach {
+                        print("$it, ")
+                        Timber.tag("SavedPitch").e("saved pitch: $it")
+                    }
+                    hertzToSent.clear()
+                }
                 //slide buffer with predefined overlap
                 for (i in 0 until bufferStepSize) {
                     instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]

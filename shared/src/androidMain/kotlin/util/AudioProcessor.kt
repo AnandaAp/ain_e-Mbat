@@ -5,6 +5,7 @@ import android.content.Context
 import android.media.AudioRecord
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.channels.Channel
 import model.AudioModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -30,7 +31,7 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
      * Start real time annotation.
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun startRecording() {
+    fun startRecording(channel: Channel<MutableList<Float>> = Channel()) {
         if (recorder.state == AudioRecord.STATE_UNINITIALIZED) {
             recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 option.setContext(context).build()
@@ -42,7 +43,11 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
         if (recorder.state == AudioRecord.STATE_INITIALIZED) {
             yin.isRunning = true
             recorder.startRecording()
-            yin.processStream(recorder, Yin.printDetectPitchHandler)
+            yin.processStream(
+                record = recorder,
+                handler = Yin.printDetectPitchHandler,
+                channel = channel
+            )
         }
     }
 

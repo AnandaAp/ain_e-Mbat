@@ -13,13 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import constants.AppConstant
 import constants.DefaultPadding
 import constants.ResourceDefault
 import ui.custom.AinRecordButton
+import util.isNotNullOrEmpty
 
 @Composable
 fun BaseLandscapeNgelaras(
     modifier: Modifier = Modifier.fillMaxSize(),
+    pitch: String = AppConstant.DEFAULT_STRING_VALUE,
     onRecordButtonClick: () -> Unit = {}
 ) {
     Surface {
@@ -34,6 +37,13 @@ fun BaseLandscapeNgelaras(
                 fontSize = MaterialTheme.typography.headlineMedium.fontSize,
                 modifier = Modifier.fillMaxWidth()
             )
+            if (pitch.isNotNullOrEmpty()) {
+                Text (
+                    text = "Kunci nada: $pitch",
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,

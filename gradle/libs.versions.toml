@@ -32,7 +32,9 @@ okhttp = "4.11.0"
 room-compiler = "2.6.1"
 shared-firebase = "1.8.1"
 precompose = "1.5.10"
+tarsos = "2.5"
 tensorflow-lite-gpu-api = "2.14.0"
+tensorflow-lite-gpu-delegate-plugin = "0.4.4"
 tensorflow-lite-select-tf-ops = "0.1.100"
 timber = "4.7.1"
 skiko-awt-runtime-windows-x64 = "0.7.85.4"
@@ -88,6 +90,7 @@ shared-firebase-common = { group = "dev.gitlive", name = "firebase-common", vers
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version = "20.4.2" }
 lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.7.0" }
 tensorflow-lite-gpu-api = { module = "org.tensorflow:tensorflow-lite-gpu-api", version.ref = "tensorflow-lite-gpu-api" }
+tensorflow-lite-gpu-delegate-plugin = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow-lite-gpu-delegate-plugin" }
 tensorflow-lite-select-tf-ops-v01100 = { module = "org.tensorflow:tensorflow-lite-select-tf-ops", version.ref = "tensorflow-lite-select-tf-ops" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
@@ -120,6 +123,9 @@ google-tensorflow-audio = { module = "org.tensorflow:tensorflow-lite-task-audio"
 google-tensorflow-gpu = { group = "com.google.android.gms", name = "play-services-tflite-gpu", version.ref = "google-tensorflow-gpu" }
 google-tensorflow-java = { group = "com.google.android.gms", name = "play-services-tflite-java", version.ref = "google-tensorflow-java" }
 google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-select-tf-ops", version.ref = "google-tensorflow-ops" }
+
+tarsos-core = { group = "be.tarsos.dsp", name = "core", version.ref = "tarsos" }
+tarsos-jvm = { group = "be.tarsos.dsp", name = "jvm", version.ref = "tarsos" }
 
 
 [plugins]
@@ -183,10 +189,16 @@ precompose = [
     "precompose-koin"
 ]
 
+tarsos = [
+    "tarsos-core",
+    "tarsos-jvm"
+]
+
 tensorflow = [
     "google-tensorflow-gpu",
     "google-tensorflow-java",
     "google-tensorflow-service",
     "google-tensorflow-audio",
-    "google-tensorflow-ops"
+    "google-tensorflow-ops",
+    "tensorflow-lite-gpu-delegate-plugin"
 ]

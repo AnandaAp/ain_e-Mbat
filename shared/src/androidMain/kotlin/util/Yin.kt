@@ -4,6 +4,10 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.Build
 import androidx.annotation.RequiresApi
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.IOException
 
 /**
@@ -23,7 +27,8 @@ import java.io.IOException
  *
 // * Original implementation is here: http://tarsos.0110.be/artikels/lees/YIN_Pitch_Tracker_in_JAVA
  */
-class Yin(private val sampleRate: Float) {
+class Yin(private val sampleRate: Float): KoinComponent {
+    protected val coroutine: CoroutineScope by inject()
     private var bufferSize = 1024
     private var overlapSize = bufferSize / 2
     var instance: Yin? = null
@@ -198,42 +203,44 @@ class Yin(private val sampleRate: Float) {
     @RequiresApi(Build.VERSION_CODES.Q)
     @Throws(IOException::class)
     fun processStream(record: AudioRecord, detectedPitchHandler: DetectedPitchHandler?) {
-        var pitchHandler = detectedPitchHandler
-        val format: AudioFormat = record.getFormat()
-        val sampleRate = format.sampleRate.toFloat()
-        val frameSize: Double = format.frameSizeInBytes.toDouble()
-        val frameRate: Double = format.sampleRate.toDouble()
-        var time: Float
+        coroutine.launch {
+            var pitchHandler = detectedPitchHandler
+            val format: AudioFormat = record.getFormat()
+            val sampleRate = format.sampleRate.toFloat()
+            val frameSize: Double = format.frameSizeInBytes.toDouble()
+            val frameRate: Double = format.sampleRate.toDouble()
+            var time: Float
 
-        //by default use the print pitch handler
-        if (pitchHandler == null) pitchHandler = printDetectPitchHandler
+            //by default use the print pitch handler
+            if (pitchHandler == null) pitchHandler = printDetectPitchHandler
 
-        //number of bytes / frameSize * frameRate gives the number of seconds
-        //because we use float buffers there is a factor 2: 2 bytes per float?
-        //Seems to be correct but a float uses 4 bytes: confused programmer is confused.
-        val timeCalculationDivider = (frameSize * frameRate / 2).toFloat()
-        var floatsProcessed: Long = 0
-        instance = Yin(sampleRate)
-        instance?.isRunning = true
-        isRunning = true
-        val bufferStepSize: Int = instance!!.bufferSize - instance!!.overlapSize
-        println("buffer step size: $bufferStepSize")
+            //number of bytes / frameSize * frameRate gives the number of seconds
+            //because we use float buffers there is a factor 2: 2 bytes per float?
+            //Seems to be correct but a float uses 4 bytes: confused programmer is confused.
+            val timeCalculationDivider = (frameSize * frameRate / 2).toFloat()
+            var floatsProcessed: Long = 0
+            instance = Yin(sampleRate)
+            instance?.isRunning = true
+            isRunning = true
+            val bufferStepSize: Int = instance!!.bufferSize - instance!!.overlapSize
+            println("buffer step size: $bufferStepSize")
 
-        //read full buffer
-        var hasMoreBytes = record.read(instance!!.inputBuffer, 0, instance!!.bufferSize) != -1
-        println("has more bytes: $hasMoreBytes")
-        floatsProcessed += instance!!.inputBuffer.size
-        println("float processed: $floatsProcessed")
-        while (hasMoreBytes && isRunning) {
-            val pitch: Float = instance!!.getPitch(inputBuffer)
-            time = floatsProcessed / timeCalculationDivider
-            pitchHandler.handleDetectedPitch(time, pitch)
-            //slide buffer with predefined overlap
-            for (i in 0 until bufferStepSize) {
-                instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]
+            //read full buffer
+            var hasMoreBytes = record.read(instance!!.inputBuffer, 0, instance!!.bufferSize) != -1
+            println("has more bytes: $hasMoreBytes")
+            floatsProcessed += instance!!.inputBuffer.size
+            println("float processed: $floatsProcessed")
+            while (hasMoreBytes && isRunning) {
+                val pitch: Float = instance!!.getPitch(inputBuffer)
+                time = floatsProcessed / timeCalculationDivider
+                pitchHandler.handleDetectedPitch(time, pitch)
+                //slide buffer with predefined overlap
+                for (i in 0 until bufferStepSize) {
+                    instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]
+                }
+                hasMoreBytes = record.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) != -1
+                floatsProcessed += bufferStepSize.toLong()
             }
-            hasMoreBytes = record.read(instance!!.inputBuffer, instance!!.overlapSize, bufferStepSize) != -1
-            floatsProcessed += bufferStepSize.toLong()
         }
     }
 

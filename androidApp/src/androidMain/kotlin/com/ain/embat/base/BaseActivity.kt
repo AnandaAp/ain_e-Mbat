@@ -37,7 +37,6 @@ open class BaseActivity: ComponentActivity(), KoinComponent {
     }
 
     override fun onDestroy() {
-//        runtimeCache.clear()
         Timber.tag(TAG).e("$TAG is now on state: onDestroy")
         super.onDestroy()
     }

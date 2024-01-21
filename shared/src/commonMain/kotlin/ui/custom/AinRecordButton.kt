@@ -20,7 +20,7 @@ import constants.ResourceDefault
 fun AinRecordButton(
     onClick: () -> Unit = { },
     shape: Shape = CircleShape,
-    modifier: Modifier = Modifier.fillMaxSize(.2f),
+    modifier: Modifier = Modifier.fillMaxSize(.3f),
     enabled: Boolean = true
 ) {
     var onButtonClick by remember { mutableStateOf(true) }

@@ -19,6 +19,7 @@ import constants.ResourceDefault
 import models.Gamelan
 import ui.custom.AinRecordButton
 import util.isNotNullOrEmpty
+import util.toOneDigitAfterDecimalPoint
 
 @Composable
 fun BaseLandscapeNgelaras(
@@ -30,7 +31,6 @@ fun BaseLandscapeNgelaras(
     buttonState: Boolean = AppConstant.DEFAULT_BOOLEAN_VALUE
 ) {
     Surface {
-
         Column(
             modifier = modifier.padding(DefaultPadding.DEFAULT_ALL),
             verticalArrangement = Arrangement.Top
@@ -43,7 +43,9 @@ fun BaseLandscapeNgelaras(
                 modifier = Modifier.fillMaxWidth()
             )
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(weight = .5f),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -56,12 +58,25 @@ fun BaseLandscapeNgelaras(
                 }
                 if (buttonState && hertz > -1.0f) {
                     Text (
-                        text = "Frequency nada: $hertz",
+                        text = "Frequency nada: ${hertz.toOneDigitAfterDecimalPoint()}",
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-                AinRecordButton(onClick = onRecordButtonClick)
+            }
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(weight = .5f),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                AinRecordButton(
+                    onClick = onRecordButtonClick,
+//                    modifier = Modifier
+//                        .width(width = 41.dp)
+//                        .height(height = 82.dp)
+                )
             }
         }
     }

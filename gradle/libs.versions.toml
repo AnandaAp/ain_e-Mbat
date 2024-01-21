@@ -49,6 +49,7 @@ google-tensorflow-service = "0.4.2.1"
 google-tensorflow-gpu = "16.2.0"
 google-tensorflow-java = "16.1.0"
 google-tensorflow-audio = "0.4.4"
+constraintlayout = "2.1.4"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
@@ -128,6 +129,7 @@ google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-sele
 
 tarsos-core = { group = "be.tarsos.dsp", name = "core", version.ref = "tarsos" }
 tarsos-jvm = { group = "be.tarsos.dsp", name = "jvm", version.ref = "tarsos" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 
 [plugins]
@@ -203,4 +205,9 @@ tensorflow = [
     "google-tensorflow-audio",
     "google-tensorflow-ops",
     "tensorflow-lite-gpu-delegate-plugin"
+]
+
+constraintlayout = [
+    "constraintlayout",
+    "constraintlayout-compose"
 ]

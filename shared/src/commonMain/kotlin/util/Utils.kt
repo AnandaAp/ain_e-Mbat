@@ -19,6 +19,7 @@ import models.Gamelan
 import models.ShimmerAnimationData
 import moe.tlaster.precompose.stateholder.SavedStateHolder
 import states.AinAnimationState
+import kotlin.math.round
 
 fun String.isNotNullOrEmpty() = this != null
         && this.isNotBlank()
@@ -109,3 +110,4 @@ inline fun Float.rangeOf(minimumValue: Float, maximumValue: Float) = (minimumVal
 fun getMinusTolerateHertz(hertz: Float) = hertz - (hertz * 0.5f/100)
 fun getPlusTolerateHertz(hertz: Float) = hertz + (hertz * 0.5f/100)
 inline fun <T> getValueBasedFromCondition(condition: Boolean, trueValue: T, falseValue: T): T = if (condition) trueValue else falseValue
+inline fun Float.toOneDigitAfterDecimalPoint() = round(this * 10.0f) / 10.0f

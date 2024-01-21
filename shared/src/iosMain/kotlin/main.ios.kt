@@ -1,7 +1,16 @@
 import androidx.compose.ui.window.ComposeUIViewController
+import navigator.IosNavigator
 
 actual fun getPlatformName(): String = "iOS"
+actual fun navigateToLanscapeUI() {
+
+}
 
 fun MainViewController() = ComposeUIViewController {
-    App()
+    val navigator = IosNavigator()
+    App(activityNavigator = navigator)
+}
+
+fun SecondViewController() = ComposeUIViewController {
+
 }

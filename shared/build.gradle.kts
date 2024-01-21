@@ -1,36 +1,37 @@
+import org.jetbrains.kotlin.gradle.plugin.mpp.Framework
+import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
+
 plugins {
     kotlin("multiplatform")
-    kotlin("plugin.serialization") version "1.9.0"
+    kotlin("plugin.serialization")
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.moko.resource)
+    id("dev.icerock.mobile.multiplatform.ios-framework")
+    id("dev.icerock.mobile.multiplatform.cocoapods")
     id("com.android.library")
     id("org.jetbrains.compose")
-    id("com.google.devtools.ksp")
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("kotlin-parcelize")
 }
 
 kotlin {
-    androidTarget()
+    targets
+        .filterIsInstance<KotlinNativeTarget>()
+        .flatMap { it.binaries }
+        .filterIsInstance<Framework>()
+        .forEach { framework ->
+            framework.linkerOpts (
+                project.file("../ios-app/Pods/TensorFlowLiteC/Frameworks").path.let { "-F$it" },
+                "-framework",
+                "TensorFlowLiteC"
+            )
+        }
 
-//    val hostOs = System.getProperty("os.name")
-//    val isArm64 = System.getProperty("os.arch") == "aarch64"
-//    val isMingwX64 = hostOs.startsWith("Windows")
-//    val nativeTarget = when {
-//        hostOs == "Mac OS X" && isArm64 -> macosArm64("native")
-//        hostOs == "Mac OS X" && !isArm64 -> macosX64("native")
-//        hostOs == "Linux" && isArm64 -> linuxArm64("native")
-//        hostOs == "Linux" && !isArm64 -> linuxX64("native")
-//        isMingwX64 -> mingwX64("native")
-//        else -> throw GradleException("Host OS is not supported in Kotlin/Native.")
-//    }
-//
-//    nativeTarget.apply {
-//        binaries {
-//            executable {
-//                entryPoint = "main"
-//            }
-//        }
-//    }
+    jvm()
+    androidTarget()
+    applyDefaultHierarchyTemplate()
 
     listOf(
-        iosX64(),
         iosArm64(),
         iosSimulatorArm64()
     ).forEach { iosTarget ->
@@ -39,13 +40,38 @@ kotlin {
             isStatic = true
             binaryOption("bundleId", "com.ain.embat")
         }
+//        iosTarget.binaries.configureEach {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
+//            }
+//        }
+    }
+
+    secrets {
+        propertiesFileName = "secret.properties"
     }
 
     sourceSets {
-        val commonMain by getting {
+        all {
+            languageSettings {
+                languageVersion = "2.0"
+            }
+        }
+        commonMain.configure {
+            kotlin.srcDirs("build/generated/ksp/main/kotlin")
             dependencies {
                 implementation(compose.runtime)
+                implementation(libs.atomicfu)
+                implementation(libs.koin.core)
+                implementation(libs.kotlinx.datetime)
+                implementation(libs.kotlinx.coroutines.core)
+                implementation(libs.mvvm.core)
+                implementation(libs.mvvm.flow)
+                implementation(libs.kotlinx.serialization.json)
+
                 implementation(compose.foundation)
+                api(compose.animation)
+                api(libs.bundles.precompose)
                 implementation(compose.material3)
                 implementation(compose.ui)
                 implementation(compose.runtimeSaveable)
@@ -53,18 +79,33 @@ kotlin {
                 implementation(compose.materialIconsExtended)
                 @OptIn(org.jetbrains.compose.ExperimentalComposeLibrary::class)
                 implementation(compose.components.resources)
-                implementation(libs.atomicfu)
-                implementation(libs.shared.firebase.firestore)
-                implementation(libs.shared.firebase.common)
                 implementation(libs.kotlinx.serialization.json)
-                implementation(libs.koin.core)
-                implementation(libs.kotlinx.datetime)
-                api(libs.kotlinx.coroutines.core)
-                api(libs.mvvm.core)
-                api(libs.mvvm.flow)
+                implementation(libs.ktor.client.logging)
+                implementation(libs.kotlinx.logging.jvm)
+                implementation (libs.bundles.tarsos)
+                api(libs.bundles.constraintlayout)
+                api(libs.google.generativeai)
             }
         }
-        val androidMain by getting {
+
+        val mobileMain by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(libs.bundles.moko)
+                implementation(libs.shared.firebase.firestore)
+                implementation(libs.shared.firebase.common)
+            }
+        }
+
+        val mobileTest by creating {
+            dependsOn(mobileMain)
+            dependencies {
+                implementation(libs.bundles.moko.test)
+            }
+        }
+
+        androidMain {
+            dependsOn(mobileMain)
             dependencies {
                 api(libs.bundles.android.compose)
                 api(libs.bundles.android.lifecycle)
@@ -79,40 +120,66 @@ kotlin {
                 api(libs.bundles.okhttp)
                 api(libs.bundles.coil)
                 api(libs.conscrypt.android)
-                api (libs.timber)
+                api(libs.timber)
                 api(libs.android.fragment)
+                api(libs.bundles.tensorflow)
             }
         }
+
+        iosMain {
+            configurations.all {
+                exclude(group = "io.github.oshai", module = "kotlin-logging-jvm")
+            }
+            dependsOn(mobileMain)
+        }
+
         val androidInstrumentedTest by getting {
             dependencies {
-                implementation(platform("androidx.compose:compose-bom:2023.03.00"))
-                implementation("androidx.compose.ui:ui-test-junit4")
-                implementation("androidx.compose.ui:ui-tooling")
-                implementation("androidx.compose.ui:ui-test-manifest")
+                implementation(project.dependencies.platform(libs.compose.bom))
+                implementation(libs.bundles.compose.test)
             }
         }
+
         val androidUnitTest by getting {
             dependencies {
                 implementation(libs.bundles.android.test)
                 implementation(libs.okhttp.mockwebserver)
             }
         }
-        val iosX64Main by getting
-        val iosArm64Main by getting
-        val iosSimulatorArm64Main by getting
-        val iosMain by creating {
-            dependsOn(commonMain)
-            iosX64Main.dependsOn(this)
-            iosArm64Main.dependsOn(this)
-            iosSimulatorArm64Main.dependsOn(this)
+
+        val jvmAndNative by creating {
+            dependsOn(commonMain.get())
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
+        }
+        jvmMain {
+            dependsOn(jvmAndNative)
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
+        }
+        nativeMain {
+            dependsOn(jvmAndNative)
+            dependencies {
+                implementation(compose.ui)
+                implementation(compose.foundation)
+            }
         }
 
-//        val nativeMain by getting {
-//            dependencies {
-//                api(compose.desktop.currentOs)
+//        val iosSimulatorArm64Main by getting {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
 //            }
 //        }
-//        val nativeTest by getting
+//
+//        val iosSimulatorArm64Test by getting {
+//            configurations.all {
+//                exclude(group = "dev.icerock.moko", module = "tensorflow")
+//            }
+//        }
     }
 }
 
@@ -123,6 +190,14 @@ android {
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
     sourceSets["main"].res.srcDirs("src/androidMain/res")
     sourceSets["main"].resources.srcDirs("src/main/res")
+
+    buildFeatures {
+        buildConfig = true
+    }
+
+    secrets {
+        propertiesFileName = "secret.properties"
+    }
 
     lint {
         baseline = file("lint-baseline.xml")
@@ -138,4 +213,14 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+}
+
+ksp {
+    arg("KOIN_CONFIG_CHECK","true")
+}
+
+multiplatformResources {
+    multiplatformResourcesPackage = "library"
+    multiplatformResourcesSourceSet = "mobileMain"
+    disableStaticFrameworkWarning = true
 }

@@ -1,0 +1,5 @@
+package viewmodel.precompose
+
+import viewmodel.CommonPreComposeViewModel
+
+open class MobileBasePreComposeViewModel: CommonPreComposeViewModel()

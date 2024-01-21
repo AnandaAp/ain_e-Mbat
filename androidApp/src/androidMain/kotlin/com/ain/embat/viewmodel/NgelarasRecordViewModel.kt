@@ -12,6 +12,8 @@ import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import constants.AppConstant
 import constants.NgelarasConstant
+import constants.TitilarasConstant
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,14 +24,15 @@ import models.Gamelan
 import org.koin.core.component.inject
 import timber.log.Timber
 import util.AudioProcessor
-import util.GendherBarung
+import util.getValueBasedFromCondition
+import util.handler.handler.GendherBarung
 import util.isNotNullOrEmpty
 import viewmodel.basic.BaseViewModel
 import java.io.File
 
 class NgelarasRecordViewModel: BaseViewModel() {
     private val context: Context by inject()
-    private val storedKey = NgelarasConstant.NGELARAS_SELECTED_CATEGORY_GAMELAN
+    private val storedKey = NgelarasConstant.NGELARAS_SELECTED_GAMELAN
     private val _audioModel = AudioModel(
         audioSource = MediaRecorder.AudioSource.CAMCORDER,
         sampleRate = 16000,
@@ -44,23 +47,46 @@ class NgelarasRecordViewModel: BaseViewModel() {
     private val audioProcessor = AudioProcessor(audioModel = _audioModel)
     private val _isRecorded = MutableStateFlow(false)
     private val _hertzValues = MutableStateFlow(floatArrayOf())
+    private val _hertz = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE)
     private val _pitch = MutableStateFlow(AppConstant.DEFAULT_STRING_VALUE)
     private val channel = Channel<MutableList<Float>>()
+    private val channelFloat = Channel<Float>()
     private val saveHertz = MutableStateFlow(mutableListOf<Float>())
     private val isOnline = MutableStateFlow(false)
     private val _gamelan = MutableStateFlow(Gamelan())
+    private val _isDataFetched = MutableStateFlow(false)
 
     val isRecorded = _isRecorded.asStateFlow()
     val hertzValues = _hertzValues.asStateFlow()
+    val hertz = _hertz.asStateFlow()
     val pitch = _pitch.asStateFlow()
     val gamelan = _gamelan.asStateFlow()
+    val isDataFetch = _isDataFetched.asStateFlow()
 
     init {
-        if (runtimeCache.getString(storedKey).isNotNullOrEmpty()) {
-            isOnline.update { true }
+        viewModelScope.launch(Dispatchers.IO) {
+            fetch()
         }
-        if (isOnline.value) {
-            _gamelan.update { runtimeCache.get<Gamelan>(storedKey)!! }
+    }
+
+    override suspend fun fetch() {
+        fetchConfig()
+    }
+
+    private fun fetchConfig() {
+        if (!isDataFetch.value) {
+            if (runtimeCache.getString(storedKey).isNotNullOrEmpty()) {
+                isOnline.update { true }
+            }
+            if (isOnline.value) {
+                _gamelan.update { runtimeCache.get<Gamelan>(storedKey)!! }
+                _isDataFetched.update { true }
+            }
+            //Temporary, only for testing purpose
+            isOnline.update { false }
+            Timber.tag("NgelarasInit").d("is data get from online page: ${isOnline.value}")
+            Timber.tag("NgelarasInit").d("gamelan data: ${gamelan.value}")
+            Timber.tag("NgelarasInit").d("one of titilaras: ${gamelan.value.frequency.laras[">y"]}")
         }
     }
 
@@ -95,10 +121,10 @@ class NgelarasRecordViewModel: BaseViewModel() {
     private fun startRecording() {
         _isRecorded.update { true }
         coroutine1.launch {
-            audioProcessor.startRecording(channel = channel)
+            audioProcessor.startRecording(channelFloat = channelFloat)
         }
         coroutine2.launch {
-            pitchTransform(channel)
+            pitchTransform(channelFloat = channelFloat)
         }
     }
 
@@ -147,7 +173,20 @@ class NgelarasRecordViewModel: BaseViewModel() {
         }
     }
 
-    private suspend fun pitchTransform(channel: Channel<MutableList<Float>> = Channel()) {
+    private suspend fun pitchTransform(
+//        channel: Channel<MutableList<Float>> = Channel(),
+        channelFloat: Channel<Float> = Channel()
+    ) {
+//        handlePitchTransformOfMutableListOfFloat(channel = channel)
+        if (channelFloat.receive() > -1.0f) {
+            _hertz.update { channelFloat.receive() }
+        }
+        if (hertz.value > -1.0f) {
+            _pitch.update { pitchConverterHandler(hertz = hertz.value) }
+        }
+    }
+
+    private suspend fun handlePitchTransformOfMutableListOfFloat(channel: Channel<MutableList<Float>>) {
         if (channel.receive().isNotNullOrEmpty()) {
             saveHertz.update { channel.receive() }
         }
@@ -157,9 +196,48 @@ class NgelarasRecordViewModel: BaseViewModel() {
         if (hertzValues.value.isNotEmpty()) {
             _hertzValues.value.forEach { hertz ->
                 _pitch.update {
-                    GendherBarung.Slendro.pitch(hertz)
+                    pitchConverterHandler(hertz = hertz)
                 }
             }
         }
     }
+
+    private fun pitchConverterHandler(hertz: Float): String {
+        return getValueBasedFromCondition(
+            condition = isOnline.value,
+            trueValue = onlinePitchConverterHandler(hertz),
+            falseValue = offlinePitchConverterHandler(hertz)
+        )
+    }
+
+    private fun onlinePitchConverterHandler(hertz: Float): String {
+        return AppConstant.DEFAULT_STRING_VALUE
+    }
+
+    private fun offlinePitchConverterHandler(hertz: Float): String {
+        return when (gamelan.value.frequency.titilaras.lowercase()) {
+            TitilarasConstant.SLENDRO -> slendroPitchConvertHandler(hertz = hertz)
+            TitilarasConstant.PELOK.NEM, TitilarasConstant.PELOK.BARANG -> pelogPitchConvertHandler(hertz = hertz)
+            else -> AppConstant.DEFAULT_STRING_VALUE
+        }
+    }
+
+    private fun slendroPitchConvertHandler(hertz: Float): String =
+        when(gamelan.value.name.lowercase()) {
+            constants.GendherBarungConstant.NAME -> GendherBarung.Slendro.pitch(hertz = hertz)
+            else -> AppConstant.DEFAULT_STRING_VALUE
+        }
+
+    private fun pelogPitchConvertHandler(hertz: Float): String =
+        when (gamelan.value.frequency.titilaras.lowercase()) {
+            TitilarasConstant.PELOK.NEM -> pelogNemConverter(hertz)
+            TitilarasConstant.PELOK.BARANG -> AppConstant.DEFAULT_STRING_VALUE
+            else -> AppConstant.DEFAULT_STRING_VALUE
+        }
+
+    private fun pelogNemConverter(hertz: Float): String =
+        when(gamelan.value.name.lowercase()) {
+            constants.GendherBarungConstant.NAME -> GendherBarung.PelogNem.pitch(hertz = hertz)
+            else -> AppConstant.DEFAULT_STRING_VALUE
+        }
 }

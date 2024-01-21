@@ -3,6 +3,7 @@ package viewmodel.basic
 import constants.AppConstant
 import constants.FirestoreConstant
 import constants.NavigationConstant
+import constants.NgelarasConstant
 import constants.RuntimeCacheConstant
 import dev.gitlive.firebase.FirebaseException
 import di.RuntimeCache
@@ -25,6 +26,7 @@ import states.Status
 import util.Navigator
 import util.dummyCategoryOfGamelan
 import util.dummyGamelanList
+import util.getValueBasedFromCondition
 import util.isNotNullOrEmpty
 
 class NgelarasViewModel: BaseViewModel() {
@@ -49,6 +51,7 @@ class NgelarasViewModel: BaseViewModel() {
         status: (Status) -> Unit = {}
     ) {
         viewModelScope.launch {
+            var selectedGamelan = Gamelan()
             when (selectedItem) {
                 is CategoryOfGamelan -> {
                     if (selectedItem.isNotNullOrEmpty()) {
@@ -61,12 +64,28 @@ class NgelarasViewModel: BaseViewModel() {
                         baseSelectedGamelan.update { selectedItem }
                     }
                 }
+                is CardModel -> {
+                    if (selectedItem.isNotNullOrEmpty()) {
+                        selectedGamelan = retrievedListOfGamelan
+                            .value
+                            .first { it.unique == selectedItem.unique }
+                        baseSelectedGamelan.update { selectedGamelan }
+                    }
+                }
             }
             status (
-                if (cache.put(key = cachedKey, value = selectedItem)) {
-                    Status.Success
-                }
-                else Status.Failed
+                if (cachedKey.isNotNullOrEmpty()
+                    && cache.put(
+                        key = cachedKey,
+                        value =
+                        getValueBasedFromCondition(
+                            condition = NgelarasConstant.NGELARAS_SELECTED_GAMELAN == cachedKey
+                                    && selectedGamelan.unique.isNotNullOrEmpty(),
+                            trueValue = selectedGamelan,
+                            falseValue = selectedItem
+                        )
+                    )) { Status.Success }
+                else { Status.Failed }
             )
         }
     }
@@ -123,7 +142,7 @@ class NgelarasViewModel: BaseViewModel() {
                 baseCategoryCardModelOfGamelan.update {
                     val cards = mutableListOf<CardModel>()
                     retrievedListOfGamelan.value.forEach { gams ->
-                        cards.add(CardModel(title = gams.name))
+                        cards.add(CardModel(title = gams.name, unique = gams.unique))
                     }
                     cards
                 }

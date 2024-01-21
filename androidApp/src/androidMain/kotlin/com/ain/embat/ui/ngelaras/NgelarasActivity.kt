@@ -9,10 +9,11 @@ import androidx.compose.ui.platform.LocalContext
 import com.ain.embat.base.BaseActivity
 import com.ain.embat.navigation.NgelarasRecordNav
 import com.ain.embat.viewmodel.NgelarasRecordViewModel
+import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import org.koin.core.component.inject
 
 class NgelarasActivity: BaseActivity() {
-    val viewModel: NgelarasRecordViewModel by inject()
+    private val viewModel: NgelarasRecordViewModel by inject()
 
     override fun onDestroy() {
         this.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
@@ -26,7 +27,12 @@ class NgelarasActivity: BaseActivity() {
         super.InitiateUI()
         hideSystemUI()
 //        val viewModel: NgelarasRecordViewModel by KoinJavaComponent.inject(clazz = NgelarasRecordViewModel::class.java)
-        NgelarasRecordNav(viewModel)
+        val pitch = viewModel.pitch.collectAsStateWithLifecycle()
+        val hertz = viewModel.hertzValues.collectAsStateWithLifecycle()
+        NgelarasRecordNav(
+            viewModel = viewModel,
+            pitch = pitch.value
+        )
     }
 
     @Composable

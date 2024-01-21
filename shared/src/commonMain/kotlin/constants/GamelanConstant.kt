@@ -1,6 +1,7 @@
 package constants
 
-object GendherBarung {
+object GendherBarungConstant {
+    const val NAME = "gendher barung"
     object Slendro {
         object FREQUENCY {
             const val Y_BAWAH = 118.8f
@@ -18,9 +19,9 @@ object GendherBarung {
             const val ANNOTATION = 632.6f
             const val HASHTAG = 726.0f
         }
-        object NAME {
-            const val Y_BAWAH = "y bawah"
-            const val Y_ATAS =  "y atas"
+        object LARAS {
+            const val Y_BAWAH = "y"
+            const val Y_ATAS =  ">y"
             const val Q = "q"
             const val W = "w"
             const val E = "e"
@@ -32,7 +33,7 @@ object GendherBarung {
             const val SIX = "6"
             const val EXCLAMATION = "!"
             const val ANNOTATION = "@"
-            const val HASHTAG = "3"
+            const val HASHTAG = "#"
         }
     }
     object PelogNem {
@@ -52,7 +53,7 @@ object GendherBarung {
             const val ANNOTATION = 657.0f
             const val HASHTAG = 716.6f
         }
-        object NAME {
+        object LARAS {
             const val Y_BAWAH = "y bawah"
             const val Y_ATAS =  "y atas"
             const val Q = "q"
@@ -66,7 +67,7 @@ object GendherBarung {
             const val SIX = "6"
             const val EXCLAMATION = "!"
             const val ANNOTATION = "@"
-            const val HASHTAG = "3"
+            const val HASHTAG = "#"
         }
     }
 }

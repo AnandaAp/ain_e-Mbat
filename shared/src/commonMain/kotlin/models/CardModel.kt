@@ -13,7 +13,8 @@ import util.isNotNullOrEmpty
 data class CardModel(
     var title: String = AppConstant.DEFAULT_STRING_VALUE,
     var subTitle: String = AppConstant.DEFAULT_STRING_VALUE,
-    var additionalText: String = AppConstant.DEFAULT_STRING_VALUE
+    var additionalText: String = AppConstant.DEFAULT_STRING_VALUE,
+    var unique: String = AppConstant.DEFAULT_STRING_VALUE
 ) {
     override fun toString() = "Card Model {\n" +
             "\tname: $title\n" +

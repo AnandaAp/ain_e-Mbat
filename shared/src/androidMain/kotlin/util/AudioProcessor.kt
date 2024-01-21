@@ -31,7 +31,10 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
      * Start real time annotation.
      */
     @RequiresApi(Build.VERSION_CODES.Q)
-    fun startRecording(channel: Channel<MutableList<Float>> = Channel()) {
+    fun startRecording(
+        channel: Channel<MutableList<Float>> = Channel(),
+        channelFloat: Channel<Float> = Channel()
+    ) {
         if (recorder.state == AudioRecord.STATE_UNINITIALIZED) {
             recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 option.setContext(context).build()
@@ -46,7 +49,7 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
             yin.processStream(
                 record = recorder,
                 handler = Yin.printDetectPitchHandler,
-                channel = channel
+                channelFloat = channelFloat
             )
         }
     }

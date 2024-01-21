@@ -108,3 +108,4 @@ fun SavedStateHolder.isNotNull(): Boolean = !this.isNull()
 inline fun Float.rangeOf(minimumValue: Float, maximumValue: Float) = (minimumValue..maximumValue).contains(this)
 fun getMinusTolerateHertz(hertz: Float) = hertz - (hertz * 0.5f/100)
 fun getPlusTolerateHertz(hertz: Float) = hertz + (hertz * 0.5f/100)
+inline fun <T> getValueBasedFromCondition(condition: Boolean, trueValue: T, falseValue: T): T = if (condition) trueValue else falseValue

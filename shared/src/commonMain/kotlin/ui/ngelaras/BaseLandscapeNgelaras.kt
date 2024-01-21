@@ -16,6 +16,7 @@ import androidx.compose.ui.text.style.TextAlign
 import constants.AppConstant
 import constants.DefaultPadding
 import constants.ResourceDefault
+import models.Gamelan
 import ui.custom.AinRecordButton
 import util.isNotNullOrEmpty
 
@@ -23,6 +24,7 @@ import util.isNotNullOrEmpty
 fun BaseLandscapeNgelaras(
     modifier: Modifier = Modifier.fillMaxSize(),
     pitch: String = AppConstant.DEFAULT_STRING_VALUE,
+    model: Gamelan = Gamelan(),
     onRecordButtonClick: () -> Unit = {}
 ) {
     Surface {

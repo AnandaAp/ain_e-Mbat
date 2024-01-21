@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import constants.AppConstant
 import constants.DefaultPadding
+import constants.NgelarasConstant
 import models.NgelarasRoute
 import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import moe.tlaster.precompose.navigation.NavHost
@@ -52,7 +53,10 @@ fun NgelarasNav(
                 topTitle = topTitle.value.name,
                 onCardClick = {
                     if (it != null) {
-                        viewModel.computeCardOnClick(it)
+                        viewModel.computeCardOnClick(
+                            selectedItem = it,
+                            cachedKey = NgelarasConstant.NGELARAS_SELECTED_GAMELAN
+                        )
                     }
                 },
                 animateState = animateState.value

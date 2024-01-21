@@ -5,7 +5,8 @@ import android.content.Context
 import android.media.AudioRecord
 import android.os.Build
 import androidx.annotation.RequiresApi
-import kotlinx.coroutines.channels.Channel
+import constants.AppConstant
+import kotlinx.coroutines.flow.MutableStateFlow
 import model.AudioModel
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -32,8 +33,8 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
      */
     @RequiresApi(Build.VERSION_CODES.Q)
     fun startRecording(
-        channel: Channel<MutableList<Float>> = Channel(),
-        channelFloat: Channel<Float> = Channel()
+        savedHertz: MutableStateFlow<Float> = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE),
+        transformHertzToPitch: () -> Unit = {}
     ) {
         if (recorder.state == AudioRecord.STATE_UNINITIALIZED) {
             recorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -49,7 +50,8 @@ class AudioProcessor(val audioModel: AudioModel): KoinComponent {
             yin.processStream(
                 record = recorder,
                 handler = Yin.printDetectPitchHandler,
-                channelFloat = channelFloat
+                savedHertz = savedHertz,
+                transformHertzToPitch = { transformHertzToPitch() }
             )
         }
     }

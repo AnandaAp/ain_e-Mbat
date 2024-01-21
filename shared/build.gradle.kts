@@ -83,6 +83,7 @@ kotlin {
                 implementation(libs.ktor.client.logging)
                 implementation(libs.kotlinx.logging.jvm)
                 implementation (libs.bundles.tarsos)
+                implementation (libs.constraintlayout.compose)
                 api(libs.google.generativeai)
             }
         }

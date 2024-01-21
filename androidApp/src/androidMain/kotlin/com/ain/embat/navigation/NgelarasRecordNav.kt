@@ -11,7 +11,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.ain.embat.viewmodel.NgelarasRecordViewModel
 import constants.AppConstant
-import moe.tlaster.precompose.flow.collectAsStateWithLifecycle
 import ui.ngelaras.BaseLandscapeNgelaras
 
 @RequiresApi(Build.VERSION_CODES.Q)
@@ -27,12 +26,13 @@ fun NgelarasRecordNav(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
         onResult = {}
     )
-    val pitch = viewModel.pitch.collectAsStateWithLifecycle()
     BaseLandscapeNgelaras(
         onRecordButtonClick = {
             recordButtonState = !recordButtonState
             viewModel.onRecordButtonClicked(launcher, recordButtonState)
         },
-        pitch = pitch.value
+        pitch = pitch,
+        hertz = hertz,
+        buttonState = recordButtonState
     )
 }

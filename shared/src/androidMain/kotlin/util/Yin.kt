@@ -4,14 +4,14 @@ import android.media.AudioFormat
 import android.media.AudioRecord
 import android.os.Build
 import androidx.annotation.RequiresApi
+import constants.AppConstant
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.plus
 import org.koin.core.component.KoinComponent
-import timber.log.Timber
 import java.io.IOException
 
 /**
@@ -212,8 +212,8 @@ class Yin(private val sampleRate: Float): KoinComponent {
     fun processStream(
         record: AudioRecord,
         handler: DetectedPitchHandler?,
-        channel: Channel<MutableList<Float>> = Channel(),
-        channelFloat: Channel<Float> = Channel()
+        savedHertz: MutableStateFlow<Float> = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE),
+        transformHertzToPitch: () -> Unit = {}
     ) {
         coroutine.launch {
             var pitchHandler = handler
@@ -242,20 +242,15 @@ class Yin(private val sampleRate: Float): KoinComponent {
             println("has more bytes: $hasMoreBytes")
             floatsProcessed += instance!!.inputBuffer.size
             println("float processed: $floatsProcessed")
-//            val hertzToSent = mutableListOf<Float>()
             while (hasMoreBytes && isRunning) {
                 val pitch: Float = instance!!.getPitch(inputBuffer)
                 time = floatsProcessed / timeCalculationDivider
                 pitchHandler.handleDetectedPitch(time, pitch)
-//                handleChannelListCoroutine(
-//                    channel = channel,
-//                    savedInstance = hertzToSent,
-//                    pitch = pitch
-//                )
                 handleChannelFloatCoroutine(
-                    channel = channelFloat,
-                    pitch = pitch
+                    pitch = pitch,
+                    savedHertz = savedHertz
                 )
+                transformHertzToPitch()
                 //slide buffer with predefined overlap
                 for (i in 0 until bufferStepSize) {
                     instance!!.inputBuffer[i] = instance!!.inputBuffer[i + instance!!.overlapSize]
@@ -266,32 +261,12 @@ class Yin(private val sampleRate: Float): KoinComponent {
         }
     }
 
-    private fun handleChannelListCoroutine(
-        channel: Channel<MutableList<Float>>,
-        savedInstance: MutableList<Float>,
-        pitch: Float
-    ) {
-        if (pitch > -1.0f) {
-            savedInstance.add(pitch)
-        }
-        if (savedInstance.isNotNullOrEmpty() && pitch <= -1.0f) {
-            channel.trySend(savedInstance)
-            print("saved pitch:")
-            savedInstance.forEach {
-                print("$it, ")
-                Timber.tag("SavedPitch").e("saved pitch: $it")
-            }
-            savedInstance.clear()
-        }
-    }
-
     private fun handleChannelFloatCoroutine(
-        channel: Channel<Float>,
-        pitch: Float
+        pitch: Float,
+        savedHertz: MutableStateFlow<Float> = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE)
     ) {
         if (pitch > -1.0f) {
-            channel.trySend(pitch)
-            Timber.tag("SavedPitch").e("saved pitch: $pitch")
+            savedHertz.value = pitch
         }
     }
 

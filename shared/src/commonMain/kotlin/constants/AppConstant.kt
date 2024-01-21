@@ -19,6 +19,7 @@ object AppConstant {
     const val DEFAULT_NUMBER_OF_RECORD = 1
     const val DEFAULT_INTEGER_VALUE = 0
     const val DEFAULT_FLOAT_VALUE = 0f
+    const val DEFAULT_BOOLEAN_VALUE = false
     const val NAME = "name"
     const val UNIQUE = "unique"
     const val LIST_OF_GAMELAN_TOP_TITLE = "Daftar Gamelan Dari\n"

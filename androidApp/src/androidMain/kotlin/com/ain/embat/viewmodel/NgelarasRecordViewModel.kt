@@ -121,10 +121,10 @@ class NgelarasRecordViewModel: BaseViewModel() {
     private fun startRecording() {
         _isRecorded.update { true }
         coroutine1.launch {
-            audioProcessor.startRecording(channelFloat = channelFloat)
-        }
-        coroutine2.launch {
-            pitchTransform(channelFloat = channelFloat)
+            audioProcessor.startRecording(
+                savedHertz = _hertz,
+                transformHertzToPitch = ::pitchTransform
+            )
         }
     }
 
@@ -173,16 +173,10 @@ class NgelarasRecordViewModel: BaseViewModel() {
         }
     }
 
-    private suspend fun pitchTransform(
-//        channel: Channel<MutableList<Float>> = Channel(),
-        channelFloat: Channel<Float> = Channel()
-    ) {
-//        handlePitchTransformOfMutableListOfFloat(channel = channel)
-        if (channelFloat.receive() > -1.0f) {
-            _hertz.update { channelFloat.receive() }
-        }
+    private fun pitchTransform() {
         if (hertz.value > -1.0f) {
             _pitch.update { pitchConverterHandler(hertz = hertz.value) }
+            Timber.tag("SavedPitch").e("saved pitch: ${hertz.value}")
         }
     }
 

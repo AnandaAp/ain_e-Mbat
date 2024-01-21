@@ -24,10 +24,13 @@ import util.isNotNullOrEmpty
 fun BaseLandscapeNgelaras(
     modifier: Modifier = Modifier.fillMaxSize(),
     pitch: String = AppConstant.DEFAULT_STRING_VALUE,
+    hertz: Float = AppConstant.DEFAULT_FLOAT_VALUE,
     model: Gamelan = Gamelan(),
-    onRecordButtonClick: () -> Unit = {}
+    onRecordButtonClick: () -> Unit = {},
+    buttonState: Boolean = AppConstant.DEFAULT_BOOLEAN_VALUE
 ) {
     Surface {
+
         Column(
             modifier = modifier.padding(DefaultPadding.DEFAULT_ALL),
             verticalArrangement = Arrangement.Top
@@ -39,18 +42,25 @@ fun BaseLandscapeNgelaras(
                 fontSize = MaterialTheme.typography.headlineMedium.fontSize,
                 modifier = Modifier.fillMaxWidth()
             )
-            if (pitch.isNotNullOrEmpty()) {
-                Text (
-                    text = "Kunci nada: $pitch",
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
             Column(
                 modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
+                if (buttonState && pitch.isNotNullOrEmpty()) {
+                    Text (
+                        text = "Kunci nada: $pitch",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+                if (buttonState && hertz > -1.0f) {
+                    Text (
+                        text = "Frequency nada: $hertz",
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 AinRecordButton(onClick = onRecordButtonClick)
             }
         }

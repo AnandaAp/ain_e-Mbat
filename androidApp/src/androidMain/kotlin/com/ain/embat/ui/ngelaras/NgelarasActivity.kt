@@ -28,10 +28,11 @@ class NgelarasActivity: BaseActivity() {
         hideSystemUI()
 //        val viewModel: NgelarasRecordViewModel by KoinJavaComponent.inject(clazz = NgelarasRecordViewModel::class.java)
         val pitch = viewModel.pitch.collectAsStateWithLifecycle()
-        val hertz = viewModel.hertzValues.collectAsStateWithLifecycle()
+        val hertz = viewModel.hertz.collectAsStateWithLifecycle()
         NgelarasRecordNav(
             viewModel = viewModel,
-            pitch = pitch.value
+            pitch = pitch.value,
+            hertz = hertz.value
         )
     }
 

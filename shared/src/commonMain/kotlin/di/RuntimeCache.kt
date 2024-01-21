@@ -7,17 +7,19 @@ import constants.ExceptionConstant.DATA_NOT_FOUND
 import constants.RuntimeCacheConstant.FALSE
 import constants.RuntimeCacheConstant.TRUE
 
-class RuntimeCache {
+@Suppress("UNCHECKED_CAST")
+object RuntimeCache {
     private val cache: Map<String, Any> = hashMapOf(CACHE_KEY to mutableMapOf<String, Any>())
 
     private val runtimeCache: MutableMap<String, Any> =  cache[CACHE_KEY] as MutableMap<String, Any>
 
     init {
-        put(CACHE_KEY_INIT_KEY, CACHE_KEY_INIT)
+        if (getString(CACHE_KEY_INIT_KEY) != DATA_NOT_FOUND) {
+            put(CACHE_KEY_INIT_KEY, CACHE_KEY_INIT)
+        }
     }
 
-    private fun String.isKeyNotEmpty(): Boolean = this.isNotBlank()
-            && this.isNotEmpty()
+    private fun String.isKeyNotEmpty(): Boolean = this.isNotBlank() && this.isNotEmpty()
 
     private fun String.isFoundInCache(): Boolean = this.isKeyNotEmpty()
             && runtimeCache.containsKey(this)
@@ -25,12 +27,14 @@ class RuntimeCache {
     private fun String.isBoolean(): Boolean = TRUE.equals(this, ignoreCase = true)
             || FALSE.equals(this, ignoreCase = true)
 
-    fun <T> put(key: String, value: T) {
-        value?.let {
-            if (key.isKeyNotEmpty()) {
-                runtimeCache[key] = it
-            }
+    fun <T : Any> put(key: String, value: T?): Boolean {
+        if (key.isFoundInCache()) {
+            remove(key)
         }
+        if (key.isKeyNotEmpty() && value != null) {
+            runtimeCache[key] = value
+        }
+        return key.isFoundInCache()
     }
 
     fun getString(key: String): String =
@@ -54,13 +58,14 @@ class RuntimeCache {
             false
         }
 
-    fun remove(key: String) {
+    fun remove(key: String): Boolean {
         if (key.isFoundInCache()) {
             runtimeCache.remove(key)
         }
+        return !key.isFoundInCache()
     }
 
     fun clear() = runtimeCache.clear()
 
-    fun get(key: String): Any? = if (key.isFoundInCache()) runtimeCache[key]!! else null
+    fun <T>get(key: String): T? = if (key.isFoundInCache()) runtimeCache[key] as T else null
 }

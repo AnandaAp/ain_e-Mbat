@@ -1,7 +1,10 @@
-rootProject.name = "MyApplication"
+import java.net.URI
+
+rootProject.name = "ain E-MBAT"
 
 include(":androidApp")
 include(":shared")
+include(":desktop")
 
 pluginManagement {
     repositories {
@@ -22,13 +25,15 @@ pluginManagement {
 
         id("com.android.application").version(agpVersion)
         id("com.android.library").version(agpVersion)
-
+        id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin").version("2.0.1")
         id("org.jetbrains.compose").version(composeVersion)
+        id("dev.icerock.mobile.multiplatform.ios-framework").version("0.14.2")
+        id("dev.icerock.mobile.multiplatform.cocoapods").version("0.14.2")
     }
 }
 
 plugins {
-    id("org.gradle.toolchains.foojay-resolver-convention") version("0.4.0")
+    id("org.gradle.toolchains.foojay-resolver-convention") version("0.7.0")
 }
 
 dependencyResolutionManagement {
@@ -36,5 +41,12 @@ dependencyResolutionManagement {
         mavenCentral()
         google()
         maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
+        maven {  // Only for snapshot artifacts
+            name = "ossrh-snapshot"
+            url = URI("https://oss.sonatype.org/content/repositories/snapshots")
+        }
+        maven(url = "https://mvn.0110.be/releases") {
+            name = "TarsosDSP repository"
+        }
     }
 }

@@ -32,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import constants.AppConstant
 import constants.BottomNavigation.feedback
 import constants.BottomNavigation.ngelaras
 import constants.BottomNavigation.pengaturan
@@ -39,6 +40,7 @@ import constants.BottomNavigation.rekaman
 import constants.BottomNavigation.tentang
 import constants.Characters.EMPTY
 import constants.ContentDescriptionConstant.ACCOUNT_DESCRIPTION
+import constants.DefaultPadding
 import constants.FilesPathConstant.ABOUT_PATH
 import constants.FilesPathConstant.FEEDBACK_PATH
 import constants.FilesPathConstant.NGELARAS_PATH
@@ -51,12 +53,19 @@ import org.jetbrains.compose.resources.ExperimentalResourceApi
 import org.jetbrains.compose.resources.painterResource
 import states.Screens
 import ui.custom.BaseGradient
+import ui.ngelaras.BaseNgelaras
 
 @OptIn(ExperimentalResourceApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun AinMbatBottomNavigation(
     screens: List<String> = listOf(),
-    cache: RuntimeCache = RuntimeCache()
+    cache: RuntimeCache = RuntimeCache,
+    content: @Composable (PaddingValues, String) -> Unit = {  padding, selectedScreen ->
+        Content(
+            padding = padding,
+            selectedScreen = selectedScreen
+        )
+    }
 ) {
     val bottomNavItems = remember { mutableStateOf(listOf<BottomNavigationItem>()) }
     var selectedScreen by remember { mutableStateOf(screens.first()) }
@@ -96,6 +105,7 @@ fun AinMbatBottomNavigation(
                  }
             }
             Scaffold(
+                modifier = Modifier.fillMaxSize(),
                 bottomBar = {
                     val gradient = BaseGradient()
 
@@ -126,13 +136,9 @@ fun AinMbatBottomNavigation(
                         title = {},
                         navigationIcon = {}
                     )
-                }
-            ) { bottomNavigationPadding ->
-                Content(
-                    padding = bottomNavigationPadding,
-                    selectedScreen = selectedScreen
-                )
-            }
+                },
+                content = { bottomNavigationPadding -> content(bottomNavigationPadding, selectedScreen) }
+            )
         }
     }
 }
@@ -140,18 +146,26 @@ fun AinMbatBottomNavigation(
 @Composable
 fun Content(
     padding: PaddingValues,
-    selectedScreen: String
+    selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE
 ) {
     AnimatedContent(selectedScreen) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(padding),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Text(text = "Selected Screen: $selectedScreen")
+        when (it) {
+            ngelaras -> BaseNgelaras(padding = padding, selectedScreen = it)
+            else -> DummyDashboardUI(padding = padding, selectedScreen = it)
         }
+    }
+}
+
+@Composable
+fun DummyDashboardUI(padding: PaddingValues, selectedScreen: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "Selected Screen: $selectedScreen")
     }
 }
 

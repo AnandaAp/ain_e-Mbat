@@ -1,32 +1,55 @@
 [versions]
 androidx-junit = "1.1.5"
 appcompat = "1.6.1"
-atomicfu = "0.21.0"
+atomicfu = "0.22.0"
 coil = "2.4.0"
-compose-activity = "1.8.0"
+compose-activity = "1.8.2"
+compose-bom = "2023.10.01"
 compose-material3 = "1.1.2"
-compose-ui-tooling = "1.5.3"
+compose-ui-tooling = "1.5.11"
 compose-version = "1.5.4"
 conscrypt-android = "2.5.2"
+constraintlayout-compose = "1.0.1"
 core-ktx = "1.12.0"
 espresso-core = "3.5.1"
-firebase-firestore-ktx = "24.9.1"
-fragment = "1.6.1"
+firebase-firestore-ktx = "24.10.0"
+fragment = "1.6.2"
 google-services = "4.4.0"
 gradle-osdetector = "1.4.0"
 junit = "4.13.2"
-koin-core = "3.2.0"
+koin-core = "3.5.0"
 koin-test-junit4 = "3.0"
+kotlin-logging-jvm = "6.0.1"
 kotlinx-coroutines-core = "1.7.3"
 kotlinx-datetime = "0.4.0"
-kotlinx-serialization-json = "1.5.1"
-lifecycle-runtime-ktx = "2.6.2"
+kotlinx-serialization-json = "1.6.0"
+kotlinx-serialization-plugin = "1.9.21"
+kotlinx-ksp = "1.9.21-1.0.16"
+ktor-client-logging = "2.3.7"
+lifecycle-runtime-ktx = "2.7.0"
 mvvm-flow = "0.13.0"
-compose-navigation = "2.7.4"
+compose-navigation = "2.7.6"
 okhttp = "4.11.0"
-room-compiler = "2.6.0"
+room-compiler = "2.6.1"
 shared-firebase = "1.8.1"
+precompose = "1.5.10"
+tarsos = "2.5"
+tensorflow-lite-gpu-api = "2.14.0"
+tensorflow-lite-gpu-delegate-plugin = "0.4.4"
+tensorflow-lite-select-tf-ops = "0.1.100"
 timber = "4.7.1"
+skiko-awt-runtime-windows-x64 = "0.7.85.4"
+google-generativeai = "0.1.2"
+moko-permission = "0.17.0"
+moko-tensorflow = "0.2.1"
+moko-resource = "0.23.0"
+google-tensorflow = "2.2.0"
+google-tensorflow-ops = "2.14.0"
+google-tensorflow-service = "0.4.2.1"
+google-tensorflow-gpu = "16.2.0"
+google-tensorflow-java = "16.1.0"
+google-tensorflow-audio = "0.4.4"
+constraintlayout = "2.1.4"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
@@ -35,11 +58,13 @@ atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu"
 coil-core = { module = "io.coil-kt:coil", version.ref = "coil" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coil" }
 compose-activity = { module = "androidx.activity:activity-compose", version.ref = "compose-activity" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom"  }
 compose-material = { group = "androidx.compose.material", name = "material", version.ref = "compose-version"  }
 compose-material3 = { module = "androidx.compose.material3:material3", version.ref = "compose-material3" }
 compose-ui-tooling = { module = "org.jetbrains.compose.ui:ui-tooling", version.ref = "compose-ui-tooling" }
 compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose-ui-tooling" }
 conscrypt-android = { module = "org.conscrypt:conscrypt-android", version.ref = "conscrypt-android" }
+constraintlayout-compose = { module = "androidx.constraintlayout:constraintlayout-compose", version.ref = "constraintlayout-compose" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "core-ktx" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espresso-core" }
 ext-junit = { module = "androidx.test.ext:junit", version.ref = "androidx-junit" }
@@ -48,10 +73,13 @@ google-services = { module = "com.google.gms:google-services", version.ref = "go
 junit = { module = "junit:junit", version.ref = "junit" }
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koin-core" }
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin-core" }
+koin-compiler = { module = "io.insert-koin:koin-ksp-compiler", version.ref = "koin-core" }
 koin-test-junit4 = { module = "io.insert-koin:koin-test-junit4", version.ref = "koin-test-junit4" }
+kotlinx-logging-jvm = { module = "io.github.oshai:kotlin-logging-jvm", version.ref = "kotlin-logging-jvm" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines-core" }
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "kotlinx-datetime" }
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinx-serialization-json" }
+ktor-client-logging = { module = "io.ktor:ktor-client-logging", version.ref = "ktor-client-logging" }
 lifecycle-runtime-compose = { module = "androidx.lifecycle:lifecycle-runtime-compose", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-runtime-ktx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
 lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
@@ -63,16 +91,52 @@ room-compiler = { module = "androidx.room:room-compiler", version.ref = "room-co
 shared-firebase-firestore = { group = "dev.gitlive", name = "firebase-firestore", version.ref = "shared-firebase"}
 shared-firebase-common = { group = "dev.gitlive", name = "firebase-common", version.ref = "shared-firebase"}
 firebase-common-ktx = { group = "com.google.firebase", name = "firebase-common-ktx", version = "20.4.2" }
-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.6.2" }
+lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version = "2.7.0" }
+tensorflow-lite-gpu-api = { module = "org.tensorflow:tensorflow-lite-gpu-api", version.ref = "tensorflow-lite-gpu-api" }
+tensorflow-lite-gpu-delegate-plugin = { module = "org.tensorflow:tensorflow-lite-gpu-delegate-plugin", version.ref = "tensorflow-lite-gpu-delegate-plugin" }
+tensorflow-lite-select-tf-ops-v01100 = { module = "org.tensorflow:tensorflow-lite-select-tf-ops", version.ref = "tensorflow-lite-select-tf-ops" }
 timber = { module = "com.jakewharton.timber:timber", version.ref = "timber" }
 
 okhttp-core = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 okhttp-mockwebserver = { group = "com.squareup.okhttp3", name = "mockwebserver", version.ref = "okhttp" }
 
+compose-test-ui-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4"}
+compose-test-ui-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest"}
+compose-test-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling"}
+
+skiko-awt-runtime-windows-x64 = { module = "org.jetbrains.skiko:skiko-awt-runtime-windows-x64", version.ref = "skiko-awt-runtime-windows-x64" }
+
+precompose-core = { group = "moe.tlaster", name = "precompose", version.ref = "precompose" }
+precompose-viewmodel = { group = "moe.tlaster", name = "precompose-viewmodel", version.ref = "precompose" }
+precompose-koin = { group = "moe.tlaster", name = "precompose-koin", version.ref = "precompose" }
+google-generativeai = { group = "com.google.ai.client.generativeai", name = "generativeai", version.ref = "google-generativeai" }
+
+moko-permission-compose = { group = "dev.icerock.moko", name = "permissions-compose", version.ref = "moko-permission" }
+moko-permission-common = { group = "dev.icerock.moko", name = "permissions", version.ref = "moko-permission" }
+moko-test-permission = { group = "dev.icerock.moko", name = "permissions-test", version.ref = "moko-permission" }
+moko-tensorflow = { group = "dev.icerock.moko", name = "tensorflow", version.ref = "moko-tensorflow"  }
+moko-resource-common = { group = "dev.icerock.moko", name = "resources", version.ref = "moko-resource" }
+moko-resource-compose = { group = "dev.icerock.moko", name = "resources-compose", version.ref = "moko-resource" }
+moko-test-resource = { group = "dev.icerock.moko", name = "resources-test", version.ref = "moko-resource" }
+
+google-tensorflow-core = { group = "org.tensorflow", name = "tensorflow-lite", version.ref = "google-tensorflow" }
+google-tensorflow-service = { group = "org.tensorflow", name = "tensorflow-lite-task-audio-play-services", version.ref = "google-tensorflow-service" }
+google-tensorflow-audio = { module = "org.tensorflow:tensorflow-lite-task-audio", version.ref = "google-tensorflow-audio" }
+google-tensorflow-gpu = { group = "com.google.android.gms", name = "play-services-tflite-gpu", version.ref = "google-tensorflow-gpu" }
+google-tensorflow-java = { group = "com.google.android.gms", name = "play-services-tflite-java", version.ref = "google-tensorflow-java" }
+google-tensorflow-ops = { group = "org.tensorflow", name = "tensorflow-lite-select-tf-ops", version.ref = "google-tensorflow-ops" }
+
+tarsos-core = { group = "be.tarsos.dsp", name = "core", version.ref = "tarsos" }
+tarsos-jvm = { group = "be.tarsos.dsp", name = "jvm", version.ref = "tarsos" }
+constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
+
+
 [plugins]
 google-services = { id = "com.google.gms.google-services", version.ref = "google-services" }
 osdetector = { id = "com.google.gradle.osdetector-gradle-plugin", version.ref = "gradle-osdetector" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "kotlinx-ksp" }
+moko-resource = { id = "dev.icerock.mobile.multiplatform-resources", version.ref = "moko-resource" }
 
 [bundles]
 android-compose = [
@@ -104,4 +168,46 @@ okhttp = [
 coil = [
     "coil-core",
     "coil-compose"
+]
+
+compose-test = [
+    "compose-test-ui-junit4",
+    "compose-test-ui-manifest",
+    "compose-test-ui-tooling"
+]
+
+moko = [
+    "moko-permission-compose",
+    "moko-resource-common",
+    "moko-resource-compose"
+]
+
+moko-test = [
+    "moko-test-permission",
+    "moko-test-resource"
+]
+
+precompose = [
+    "precompose-core",
+    "precompose-viewmodel",
+    "precompose-koin"
+]
+
+tarsos = [
+    "tarsos-core",
+    "tarsos-jvm"
+]
+
+tensorflow = [
+    "google-tensorflow-gpu",
+    "google-tensorflow-java",
+    "google-tensorflow-service",
+    "google-tensorflow-audio",
+    "google-tensorflow-ops",
+    "tensorflow-lite-gpu-delegate-plugin"
+]
+
+constraintlayout = [
+    "constraintlayout",
+    "constraintlayout-compose"
 ]

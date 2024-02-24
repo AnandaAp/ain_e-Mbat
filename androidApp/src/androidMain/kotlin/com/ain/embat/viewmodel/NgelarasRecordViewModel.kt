@@ -44,17 +44,17 @@ class NgelarasRecordViewModel: BaseViewModel() {
             AudioFormat.ENCODING_PCM_16BIT
         )
     )
-    private val audioProcessor = AudioProcessor(audioModel = _audioModel)
+    private lateinit var audioProcessor: AudioProcessor
     private val _isRecorded = MutableStateFlow(false)
     private val _hertzValues = MutableStateFlow(floatArrayOf())
     private val _hertz = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE)
     private val _pitch = MutableStateFlow(AppConstant.DEFAULT_STRING_VALUE)
     private val channel = Channel<MutableList<Float>>()
-    private val channelFloat = Channel<Float>()
     private val saveHertz = MutableStateFlow(mutableListOf<Float>())
     private val isOnline = MutableStateFlow(false)
     private val _gamelan = MutableStateFlow(Gamelan())
     private val _isDataFetched = MutableStateFlow(false)
+    private val _isRecallPermissionReq = MutableStateFlow(false)
 
     val isRecorded = _isRecorded.asStateFlow()
     val hertzValues = _hertzValues.asStateFlow()
@@ -62,6 +62,7 @@ class NgelarasRecordViewModel: BaseViewModel() {
     val pitch = _pitch.asStateFlow()
     val gamelan = _gamelan.asStateFlow()
     val isDataFetch = _isDataFetched.asStateFlow()
+    val isRecallPermissionReq = _isRecallPermissionReq.asStateFlow()
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -92,7 +93,7 @@ class NgelarasRecordViewModel: BaseViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onRecordButtonClicked(
-        launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
+        launcher: ManagedActivityResultLauncher<String, Boolean>,
         state: Boolean
     ) {
         coroutine1.launch {
@@ -107,11 +108,17 @@ class NgelarasRecordViewModel: BaseViewModel() {
                     "android.permission.READ_MEDIA_AUDIO"
                 )
             ) { callback ->
+                Timber.tag("StarterViewModel").i("callback for Permission record audio check is $callback")
                 if (callback) {
                     when (state) {
-                        true ->  startRecording()
+                        true ->  {
+                            audioProcessor = AudioProcessor(audioModel = _audioModel)
+                            startRecording()
+                        }
                         false -> stopRecording()
                     }
+                } else {
+                    _isRecallPermissionReq.update { true }
                 }
             }
         }
@@ -143,12 +150,11 @@ class NgelarasRecordViewModel: BaseViewModel() {
    private suspend fun checkAndRequestRecordPermission(
        context: Context,
        vararg permissions: String,
-       launcher: ManagedActivityResultLauncher<Array<String>, Map<String, Boolean>>,
+       launcher: ManagedActivityResultLauncher<String, Boolean>,
        onCallBack: suspend (Boolean) -> Unit = {  }
     ) {
-       val permissionCheckResult = permissions.all { permission ->
-           ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
-       }
+       val permissionCheckResult = ContextCompat.checkSelfPermission(context, "android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_GRANTED
+       Timber.tag("StarterViewModel").i("Permission record audio check is $permissionCheckResult")
        val launchPermission = mutableListOf<String>()
        for (per in permissions) {
            launchPermission.add(per)
@@ -159,7 +165,7 @@ class NgelarasRecordViewModel: BaseViewModel() {
        } else {
            // Request a permission
            onCallBack(false)
-           launcher.launch(launchPermission.toTypedArray<String>())
+           launcher.launch("android.permission.RECORD_AUDIO")
        }
     }
 

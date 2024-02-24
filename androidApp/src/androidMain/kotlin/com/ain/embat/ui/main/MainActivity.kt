@@ -2,16 +2,25 @@ package com.ain.embat.ui.main
 
 
 import MainView
+import androidx.activity.compose.ManagedActivityResultLauncher
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ain.embat.base.BaseActivity
 import com.ain.embat.ui.theme.Material3AinEmbatTheme
 import com.ain.embat.utils.AndroidNavigator
+import viewmodel.StarterViewModel
 import constants.AppConstant
 import constants.AppConstant.SHADY
 import constants.Characters.EMPTY
@@ -31,13 +40,50 @@ class MainActivity : BaseActivity() {
     private val productViewModel: ProductViewModel by viewModel()
     private val systemViewModel: SystemViewModel by viewModel()
     private val ngelarasViewModel: NgelarasViewModel by viewModel()
+    private val starterViewModel: StarterViewModel by viewModel()
     private lateinit var _product: Product
     private lateinit var _bottomNavItems: List<String>
     private lateinit var eligibility: String
 
     @Composable
     override fun InitiateUI() {
+        val permissionStatus by starterViewModel.permissionStatus.collectAsStateWithLifecycle()
+        var permissionCollection by remember { mutableIntStateOf(-1) }
+        val launcher = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.RequestMultiplePermissions(),
+            onResult = {
+                it.let {
+                    it["android.permission.RECORD_AUDIO"]?.let { isGranted ->
+                        Timber.tag("StarterViewModel").e("permission for record audio is $isGranted")
+                        if (isGranted) {
+                            permissionCollection++
+                        }
+                    }
+                    it["android.permission.READ_MEDIA_AUDIO"]?.let { isGranted ->
+                        Timber.tag("StarterViewModel").e("permission for read media audio is $isGranted")
+                        if (isGranted) {
+                            permissionCollection++
+                        }
+                    }
+                }
+            }
+        )
+        SideEffect {
+            initializePermission(permissionStatus, launcher)
+            if (permissionCollection <= 0 && !permissionStatus) {
+                launcher.launch(starterViewModel.permissions)
+            }
+        }
         InitializeProduct()
+    }
+
+    private fun initializePermission(permissionStatus: Boolean, launcher: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>) {
+        starterViewModel.checkPermission { isGranted ->
+            starterViewModel.updatePermissionStatus(isGranted)
+            if (!permissionStatus) {
+                launcher.launch(starterViewModel.permissions)
+            }
+        }
     }
 
     /**
@@ -96,12 +142,7 @@ class MainActivity : BaseActivity() {
             label = TAG!!
         ) { productType ->
             when (productType) {
-                AppConstant.Type.ANDROID_ONLY -> MainView(
-                    cache,
-                    ngelarasViewModel,
-                    AndroidNavigator(context = context)
-                )
-                AppConstant.Type.FULL_TYPE -> MainView(
+                AppConstant.Type.ANDROID_ONLY, AppConstant.Type.FULL_TYPE -> MainView(
                     cache,
                     ngelarasViewModel,
                     AndroidNavigator(context = context)

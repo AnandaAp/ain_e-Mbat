@@ -16,6 +16,7 @@ kotlin {
                 implementation(project(":shared"))
 //                api(libs.bundles.tensorflow)
                 api(libs.compose.ui.tooling.preview)
+                implementation ("com.google.accompanist:accompanist-permissions:0.34.0")
 //                api(libs.tensorflow.lite.select.tf.ops.v01100)
             }
         }

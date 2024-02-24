@@ -67,22 +67,22 @@ fun AinMbatBottomNavigation(
         )
     }
 ) {
-    val bottomNavItems = remember { mutableStateOf(listOf<BottomNavigationItem>()) }
+    var bottomNavItems by remember { mutableStateOf(listOf<BottomNavigationItem>()) }
     var selectedScreen by remember { mutableStateOf(screens.first()) }
     var selectedIndex by remember { mutableStateOf(ZERO) }
     var showContent by remember { mutableStateOf(true) }
 
     LaunchedEffect(key1 = screens) {
-        if (screens.isNotEmpty()) {
+        if (screens.isNotEmpty() && bottomNavItems.isEmpty()) {
             val tempScreen = mutableStateListOf<BottomNavigationItem>()
             screens.forEach { label ->
                 tempScreen.add(BottomNavigationItem(label = label))
             }
-            bottomNavItems.value = tempScreen
+            bottomNavItems = tempScreen
         }
     }
 
-    if (bottomNavItems.value.isNotEmpty()) {
+    if (bottomNavItems.isNotEmpty()) {
         Column(modifier = Modifier.fillMaxSize()) {
             Box(modifier = Modifier
                 .fillMaxWidth()
@@ -110,7 +110,7 @@ fun AinMbatBottomNavigation(
                     val gradient = BaseGradient()
 
                     BottomAppBar(modifier = Modifier.background(gradient)) {
-                        bottomNavItems.value.forEachIndexed { index, screen ->
+                        bottomNavItems.forEachIndexed { index, screen ->
                             NavigationBarItem(
                                 selected = index == selectedIndex,
                                 label = { Text(text = screen.label) },

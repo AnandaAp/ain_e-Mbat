@@ -50,6 +50,8 @@ google-tensorflow-gpu = "16.2.0"
 google-tensorflow-java = "16.1.0"
 google-tensorflow-audio = "0.4.4"
 constraintlayout = "2.1.4"
+version-code = "1"
+version-name = "1.003-RC"
 
 [libraries]
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }

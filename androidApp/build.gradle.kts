@@ -26,9 +26,9 @@ android {
     compileSdk = (findProperty("android.compileSdk") as String).toInt()
     namespace = "com.ain.embat"
 
-    buildFeatures {
-        buildConfig = true
-    }
+//    buildFeatures {
+//        buildConfig = true
+//    }
 
     secrets {
         propertiesFileName = "secret.properties"
@@ -40,8 +40,8 @@ android {
         applicationId = "com.ain.embat"
         minSdk = (findProperty("android.minSdk") as String).toInt()
         targetSdk = (findProperty("android.targetSdk") as String).toInt()
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = libs.versions.version.code.get().toInt()
+        versionName = libs.versions.version.name.get()
         ndk {
             abiFilters.add("armeabi-v7a")
             abiFilters.add("arm64-v8a")

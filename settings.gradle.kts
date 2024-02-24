@@ -1,6 +1,6 @@
 import java.net.URI
 
-rootProject.name = "ain E-MBAT"
+rootProject.name = "ain_e-Mbat"
 
 include(":androidApp")
 include(":shared")

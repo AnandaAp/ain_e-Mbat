@@ -122,7 +122,6 @@ kotlin {
                 api(libs.conscrypt.android)
                 api(libs.timber)
                 api(libs.android.fragment)
-                api(libs.bundles.tensorflow)
             }
         }
 

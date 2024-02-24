@@ -3,9 +3,6 @@ package com.ain.embat.base
 import android.app.Application
 import android.content.Context
 import com.ain.embat.di.nativeAndroidKoinModule
-import com.google.android.gms.tflite.client.TfLiteInitializationOptions
-import com.google.android.gms.tflite.internal.TfLiteJavaInitializerBase
-import com.google.android.gms.tflite.java.TfLite
 import com.google.firebase.firestore.LocalCacheSettings
 import com.google.firebase.firestore.ktx.firestoreSettings
 import com.google.firebase.firestore.ktx.memoryCacheSettings
@@ -19,9 +16,6 @@ import org.conscrypt.Conscrypt
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.component.KoinComponent
-import org.tensorflow.lite.TensorFlowLite
-import org.tensorflow.lite.task.gms.audio.TfLiteAudio
-import org.tensorflow.lite.task.gms.audio.TfLiteTaskAudioInitializer
 import timber.log.Timber
 import timber.log.Timber.DebugTree
 import java.security.Security
@@ -52,24 +46,5 @@ class BaseApplication: Application(), KoinComponent, LocalCacheSettings {
         }
         Firebase.initialize(this)
         Firebase.firestore.android.firestoreSettings = settings
-        TensorFlowLite.init()
-        TfLiteJavaInitializerBase(appContext)
-        val optionsBuilder = TfLiteInitializationOptions
-            .builder()
-            .setEnableGpuDelegateSupport(true)
-            .build()
-        TfLite.initialize(appContext, optionsBuilder).addOnSuccessListener {
-            Timber.tag("TensorFlow").e("TFLite successfully initialized: Using GPU")
-            TfLiteTaskAudioInitializer(appContext)
-            TfLiteAudio.initialize(appContext, optionsBuilder)
-        }.addOnFailureListener {
-            TfLite.initialize(appContext).addOnSuccessListener {
-                Timber.tag("TensorFlow").e("TFLite successfully initialized: without GPU")
-                TfLiteTaskAudioInitializer(appContext)
-                TfLiteAudio.initialize(appContext, optionsBuilder)
-            }.addOnFailureListener {
-                Timber.tag("TensorFlow").e("TfLiteVision failed to initialize: $it")
-            }
-        }
     }
 }

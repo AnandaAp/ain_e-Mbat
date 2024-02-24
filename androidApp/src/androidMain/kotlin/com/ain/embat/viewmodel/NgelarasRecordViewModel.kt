@@ -1,13 +1,16 @@
 package com.ain.embat.viewmodel
 
 import android.content.Context
+import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.content.pm.PackageManager
 import android.media.AudioFormat
 import android.media.AudioRecord
 import android.media.MediaRecorder
+import android.net.Uri
 import android.os.Build
 import android.os.Environment
-import androidx.activity.compose.ManagedActivityResultLauncher
+import android.provider.Settings
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import constants.AppConstant
@@ -44,7 +47,7 @@ class NgelarasRecordViewModel: BaseViewModel() {
             AudioFormat.ENCODING_PCM_16BIT
         )
     )
-    private lateinit var audioProcessor: AudioProcessor
+    private var audioProcessor: AudioProcessor? = null
     private val _isRecorded = MutableStateFlow(false)
     private val _hertzValues = MutableStateFlow(floatArrayOf())
     private val _hertz = MutableStateFlow(AppConstant.DEFAULT_FLOAT_VALUE)
@@ -93,7 +96,6 @@ class NgelarasRecordViewModel: BaseViewModel() {
 
     @RequiresApi(Build.VERSION_CODES.Q)
     fun onRecordButtonClicked(
-        launcher: ManagedActivityResultLauncher<String, Boolean>,
         state: Boolean
     ) {
         coroutine1.launch {
@@ -102,7 +104,6 @@ class NgelarasRecordViewModel: BaseViewModel() {
         viewModelScope.launch {
             checkAndRequestRecordPermission(
                 context = context,
-                launcher = launcher,
                 permissions = arrayOf(
                     "android.permission.RECORD_AUDIO",
                     "android.permission.READ_MEDIA_AUDIO"
@@ -112,23 +113,36 @@ class NgelarasRecordViewModel: BaseViewModel() {
                 if (callback) {
                     when (state) {
                         true ->  {
+                            updateRecallPermissionRequestStatus(state = false)
                             audioProcessor = AudioProcessor(audioModel = _audioModel)
                             startRecording()
                         }
                         false -> stopRecording()
                     }
                 } else {
-                    _isRecallPermissionReq.update { true }
+                    updateRecallPermissionRequestStatus(state = true)
                 }
             }
         }
+    }
+
+    fun updateRecallPermissionRequestStatus(state: Boolean) {
+        _isRecallPermissionReq.update { state }
+    }
+
+    fun openApplicationSetting() {
+        val intent = Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.fromParts( "package", context.packageName, null)
+        )
+        context.startActivity(intent.addFlags(FLAG_ACTIVITY_NEW_TASK))
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
     private fun startRecording() {
         _isRecorded.update { true }
         coroutine1.launch {
-            audioProcessor.startRecording(
+            audioProcessor?.startRecording(
                 savedHertz = _hertz,
                 transformHertzToPitch = ::pitchTransform
             )
@@ -138,19 +152,18 @@ class NgelarasRecordViewModel: BaseViewModel() {
     private fun stopRecording() {
         if (isRecorded.value) {
             _isRecorded.update { false }
-            audioProcessor.stopRecording()
+            audioProcessor?.stopRecording()
         }
     }
 
     fun releaseAudio() {
-        audioProcessor.release()
+        audioProcessor?.release()
         channel.close()
     }
 
    private suspend fun checkAndRequestRecordPermission(
        context: Context,
        vararg permissions: String,
-       launcher: ManagedActivityResultLauncher<String, Boolean>,
        onCallBack: suspend (Boolean) -> Unit = {  }
     ) {
        val permissionCheckResult = ContextCompat.checkSelfPermission(context, "android.permission.RECORD_AUDIO") == PackageManager.PERMISSION_GRANTED
@@ -165,7 +178,6 @@ class NgelarasRecordViewModel: BaseViewModel() {
        } else {
            // Request a permission
            onCallBack(false)
-           launcher.launch("android.permission.RECORD_AUDIO")
        }
     }
 
@@ -205,12 +217,13 @@ class NgelarasRecordViewModel: BaseViewModel() {
     private fun pitchConverterHandler(hertz: Float): String {
         return getValueBasedFromCondition(
             condition = isOnline.value,
-            trueValue = onlinePitchConverterHandler(hertz),
+            trueValue = hertz.onlinePitchConverterHandler(),
             falseValue = offlinePitchConverterHandler(hertz)
         )
     }
 
-    private fun onlinePitchConverterHandler(hertz: Float): String {
+    private fun Float.onlinePitchConverterHandler(): String {
+        Timber.tag(this::class.simpleName).d("online data = [\nthis\n]")
         return AppConstant.DEFAULT_STRING_VALUE
     }
 

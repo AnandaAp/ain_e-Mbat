@@ -4,7 +4,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -13,6 +16,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import constants.AppConstant
 import constants.DefaultPadding
 import constants.NgelarasConstant
@@ -49,31 +54,45 @@ fun MobileNgelaras(
         viewModel.checkAnimatedState(key = RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY)
     }
 
-    when (animateState) {
-        AinAnimationState.Keep -> ShimmerLoadingScreen(state = animateState, padding = padding)
-        else -> Column(
-            verticalArrangement = verticalArrangement,
-            horizontalAlignment = horizontalAlignment,
-            modifier = modifier
-        ) {
-            NgelarasLazyColumn(
-                padding = padding,
-                item = viewModel.cache.getList(RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY),
-                selectedScreen = selectedScreen,
-                cardOnClick = { gamelan ->
-                    onClickState = !onClickState
-                    selectedCategory = gamelan
-                    viewModel.computeCardOnClick(
-                        selectedItem = selectedCategory,
-                        cachedKey = NgelarasConstant.NGELARAS_SELECTED_CATEGORY_GAMELAN
-                    ) { status ->
-                        selectedUIState.value = status
-                    }
+    Column(
+        verticalArrangement = verticalArrangement,
+        horizontalAlignment = horizontalAlignment,
+        modifier = modifier
+    ) {
+        Text(
+            text = AppConstant.DAFTAR_TITLE.uppercase(),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+        )
+        Text(
+            text = AppConstant.GAMELAN_TITLE.uppercase(),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = MaterialTheme.typography.headlineMedium.fontSize
+        )
+        NgelarasLazyColumn(
+            animateState = animateState,
+            padding = PaddingValues(
+                vertical = DefaultPadding.DEFAULT_CONTENT_VERTICAL_PADDING,
+                horizontal = DefaultPadding.DEFAULT_CONTENT_HORIZONTAL_PADDING
+            ),
+            item = viewModel.cache.getList(RuntimeCacheConstant.CATEGORY_OF_GAMELAN_KEY),
+            selectedScreen = selectedScreen,
+            cardOnClick = { gamelan ->
+                onClickState = !onClickState
+                selectedCategory = gamelan
+                viewModel.computeCardOnClick(
+                    selectedItem = selectedCategory,
+                    cachedKey = NgelarasConstant.NGELARAS_SELECTED_CATEGORY_GAMELAN
+                ) { status ->
+                    selectedUIState.value = status
                 }
-            )
-
-            AinStatusHandler(status = selectedUIState.value, onSuccessCallBack = { NavigateToListOfGamelan(navigator) })
-        }
+            }
+        )
+        AinStatusHandler(status = selectedUIState.value, onSuccessCallBack = { NavigateToListOfGamelan(navigator) })
     }
 }
 

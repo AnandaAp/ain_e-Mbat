@@ -20,12 +20,15 @@ import constants.AppConstant
 import constants.DefaultPadding
 import models.CategoryOfGamelan
 import models.Gamelan
+import states.AinAnimationState
+import util.shimmerLoadingAnimation
 
 @Composable
 fun NgelarasLazyColumn(
     padding: PaddingValues,
     item: List<CategoryOfGamelan>,
     selectedScreen: String = AppConstant.DEFAULT_STRING_VALUE,
+    animateState: AinAnimationState = AinAnimationState.Gone,
     selectedItem: (CategoryOfGamelan) -> Unit = { CategoryOfGamelan() },
     cardOnClick: (CategoryOfGamelan) -> Unit = { selectedItem(it) },
     modifier: Modifier = Modifier
@@ -36,13 +39,6 @@ fun NgelarasLazyColumn(
         modifier = modifier,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(
-            text = AppConstant.DAFTAR_GAMELAN_TITLE.uppercase(),
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            fontSize = MaterialTheme.typography.headlineMedium.fontSize
-        )
         LazyVerticalGrid(
             modifier = Modifier.wrapContentSize(),
             columns = GridCells.Adaptive(minSize = DefaultPadding.DEFAULT_GRID_MIN_SIZE),
@@ -50,14 +46,23 @@ fun NgelarasLazyColumn(
             horizontalArrangement = Arrangement.spacedBy(DefaultPadding.DEFAULT_CONTENT_HORIZONTAL_PADDING),
             contentPadding = PaddingValues(all = DefaultPadding.DEFAULT_CONTENT_PADDING_ALL)
         ) {
-            items(items = item) { gamelan ->
-                AinCard(
-                    title = if (gamelan.isNotNullOrEmpty()) gamelan.name else AppConstant.DEFAULT_STRING_VALUE,
-                    onClick = {
-                        cardOnClick(gamelan)
-                        selectedItem(gamelan)
-                    }
-                )
+            if (item.isNullOrEmpty()) {
+                println("animated state: $animateState")
+                items(8) {
+                    AinCard(modifier = Modifier
+                        .fillMaxWidth()
+                        .shimmerLoadingAnimation(state = animateState))
+                }
+            } else {
+                items(items = item) { gamelan ->
+                    AinCard(
+                        title = if (gamelan.isNotNullOrEmpty()) gamelan.name else AppConstant.DEFAULT_STRING_VALUE,
+                        onClick = {
+                            cardOnClick(gamelan)
+                            selectedItem(gamelan)
+                        }
+                    )
+                }
             }
         }
     }

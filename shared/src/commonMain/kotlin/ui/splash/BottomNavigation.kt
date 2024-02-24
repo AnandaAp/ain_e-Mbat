@@ -84,26 +84,6 @@ fun AinMbatBottomNavigation(
 
     if (bottomNavItems.isNotEmpty()) {
         Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .fillMaxHeight(.07f)
-                .background(color = MaterialTheme.colorScheme.surface)
-            ) {
-                 Column(
-                     modifier = Modifier
-                         .padding(end = 14.dp)
-                         .fillMaxSize(),
-                     verticalArrangement = Arrangement.Center,
-                     horizontalAlignment = Alignment.End
-                 ) {
-                     Icon(
-                         imageVector = Icons.Default.AccountCircle,
-                         contentDescription = ACCOUNT_DESCRIPTION,
-                         tint = MaterialTheme.colorScheme.onSurface,
-                         modifier = Modifier.size(35.dp)
-                     )
-                 }
-            }
             Scaffold(
                 modifier = Modifier.fillMaxSize(),
                 bottomBar = {

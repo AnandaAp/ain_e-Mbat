@@ -1,24 +1,24 @@
 import UIKit
 import SwiftUI
-import shared
+//import shared
 
-struct ComposeView: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> UIViewController {
-        Main_iosKt.MainViewController()
-    }
+//struct ComposeView: UIViewControllerRepresentable {
+//    func makeUIViewController(context: Context) -> UIViewController {
+//        Main_iosKt.MainViewController()
+//    }
 
-    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
-}
+//    func updateUIViewController(_ uiViewController: UIViewController, context: Context) {}
+//}
 
-struct ContentView: View {
-    var body: some View {
-        ComposeView()
-                .ignoresSafeArea(.all, edges: .bottom) // Compose has own keyboard handler
-    }
-}
+//struct ContentView: View {
+//    var body: some View {
+//        ComposeView()
+//                .ignoresSafeArea(.all, edges: .bottom) // Compose has own keyboard handler
+//    }
+//}
 
 func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-    KoinKt.doInitKoin()
+//    KoinKt.doInitKoin()
     return true
 }
 

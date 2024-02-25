@@ -33,18 +33,15 @@ kotlin {
 
     listOf(
         iosArm64(),
-        iosSimulatorArm64()
+        iosSimulatorArm64(),
+        iosX64()
     ).forEach { iosTarget ->
         iosTarget.binaries.framework {
             baseName = "shared"
             isStatic = true
             binaryOption("bundleId", "com.ain.embat")
+            binaryOption("appName", "Ain Embat")
         }
-//        iosTarget.binaries.configureEach {
-//            configurations.all {
-//                exclude(group = "dev.icerock.moko", module = "tensorflow")
-//            }
-//        }
     }
 
     secrets {
@@ -167,18 +164,6 @@ kotlin {
                 implementation(compose.foundation)
             }
         }
-
-//        val iosSimulatorArm64Main by getting {
-//            configurations.all {
-//                exclude(group = "dev.icerock.moko", module = "tensorflow")
-//            }
-//        }
-//
-//        val iosSimulatorArm64Test by getting {
-//            configurations.all {
-//                exclude(group = "dev.icerock.moko", module = "tensorflow")
-//            }
-//        }
     }
 }
 

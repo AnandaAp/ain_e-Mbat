@@ -3,12 +3,12 @@ import SwiftUI
 @main
 struct iOSApp: App {
     init() {
-        MobileKoinKt.doinitMobileKoin()
+//        MobileKoinKt.doinitMobileKoin()
     }
 
 	var body: some Scene {
 		WindowGroup {
-			ContentView()
+//			ContentView()
 		}
 	}
 }

@@ -1,4 +1,5 @@
 [versions]
+accompanist-permissions = "0.34.0"
 androidx-junit = "1.1.5"
 appcompat = "1.6.1"
 atomicfu = "0.22.0"
@@ -54,6 +55,7 @@ version-code = "1"
 version-name = "1.003-RC"
 
 [libraries]
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist-permissions" }
 android-fragment = { module = "androidx.fragment:fragment", version.ref = "fragment" }
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompat" }
 atomicfu = { module = "org.jetbrains.kotlinx:atomicfu", version.ref = "atomicfu" }

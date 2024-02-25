@@ -83,5 +83,5 @@ fun NgelarasRecordNav(
                 }
             }
         }
-    }
+    } else isAlertDialogVisible = false
 }

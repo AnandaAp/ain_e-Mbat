@@ -45,6 +45,10 @@ class NgelarasViewModel: BaseViewModel() {
     val selectedGamelan = baseSelectedGamelan.asStateFlow()
     val animateState = shimmerAnimateState.asStateFlow()
 
+    init {
+        shimmerAnimateState.update { AinAnimationState.Keep }
+    }
+
     fun computeCardOnClick(
         selectedItem: Any,
         cachedKey: String = AppConstant.DEFAULT_STRING_VALUE,
@@ -68,7 +72,8 @@ class NgelarasViewModel: BaseViewModel() {
                     if (selectedItem.isNotNullOrEmpty()) {
                         selectedGamelan = retrievedListOfGamelan
                             .value
-                            .first { it.unique == selectedItem.unique }
+                            .filter { it.unique == selectedItem.unique }
+                            .find { it.unique == selectedItem.unique }!!
                         baseSelectedGamelan.update { selectedGamelan }
                     }
                 }
@@ -79,7 +84,7 @@ class NgelarasViewModel: BaseViewModel() {
                         key = cachedKey,
                         value =
                         getValueBasedFromCondition(
-                            condition = NgelarasConstant.NGELARAS_SELECTED_GAMELAN == cachedKey
+                            condition = (NgelarasConstant.NGELARAS_SELECTED_GAMELAN == cachedKey)
                                     && selectedGamelan.unique.isNotNullOrEmpty(),
                             trueValue = selectedGamelan,
                             falseValue = selectedItem
@@ -123,9 +128,6 @@ class NgelarasViewModel: BaseViewModel() {
 
     fun fetchListOfGamelan() {
         coroutine2.launch {
-//            if (cache.getList<Gamelan>(key = RuntimeCacheConstant.GAMELAN_KEY).isNotNullOrEmpty()) {
-//                return@launch
-//            }
             delay(2000)
             val response = async {
                 val retrievedGamelan = getListOfGamelan()

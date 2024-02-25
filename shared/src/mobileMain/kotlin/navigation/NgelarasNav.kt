@@ -2,6 +2,7 @@ package navigation
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import constants.AppConstant
 import constants.DefaultPadding
 import constants.NgelarasConstant
@@ -30,13 +31,13 @@ fun NgelarasNav(
         navTransition = NavTransition()
     ) {
         scene(route = NgelarasRoute.NgelarasHome.route) {
-            val animateState = viewModel.animateState.collectAsStateWithLifecycle()
+            val animateState by viewModel.animateState.collectAsStateWithLifecycle()
             MobileNgelaras(
                 navigator = navigator,
                 padding = padding,
                 selectedScreen = selectedScreen,
                 viewModel = viewModel,
-                animateState = animateState.value
+                animateState = animateState
             )
         }
 

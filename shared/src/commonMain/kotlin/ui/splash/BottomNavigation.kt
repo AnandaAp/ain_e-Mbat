@@ -78,7 +78,8 @@ fun AinMbatBottomNavigation(
             screens.forEach { label ->
                 tempScreen.add(BottomNavigationItem(label = label))
             }
-            bottomNavItems = tempScreen
+            val output = tempScreen.distinct()
+            bottomNavItems = output
         }
     }
 

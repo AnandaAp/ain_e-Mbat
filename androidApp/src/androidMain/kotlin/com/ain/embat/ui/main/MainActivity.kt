@@ -51,22 +51,7 @@ class MainActivity : BaseActivity() {
         var permissionCollection by remember { mutableIntStateOf(-1) }
         val launcher = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.RequestMultiplePermissions(),
-            onResult = {
-                it.let {
-                    it["android.permission.RECORD_AUDIO"]?.let { isGranted ->
-                        Timber.tag("StarterViewModel").e("permission for record audio is $isGranted")
-                        if (isGranted) {
-                            permissionCollection++
-                        }
-                    }
-                    it["android.permission.READ_MEDIA_AUDIO"]?.let { isGranted ->
-                        Timber.tag("StarterViewModel").e("permission for read media audio is $isGranted")
-                        if (isGranted) {
-                            permissionCollection++
-                        }
-                    }
-                }
-            }
+            onResult = { result -> permissionCollection.plus(onResultCalled(result = result)) }
         )
         SideEffect {
             initializePermission(permissionStatus, launcher)
@@ -75,6 +60,25 @@ class MainActivity : BaseActivity() {
             }
         }
         InitializeProduct()
+    }
+
+    private fun onResultCalled(result: Map<String, Boolean>): Int {
+        var output = 0
+        result.let {
+            it["android.permission.RECORD_AUDIO"]?.let { isGranted ->
+                Timber.tag("StarterViewModel").e("permission for record audio is $isGranted")
+                if (isGranted) {
+                    output++
+                }
+            }
+            it["android.permission.READ_MEDIA_AUDIO"]?.let { isGranted ->
+                Timber.tag("StarterViewModel").e("permission for read media audio is $isGranted")
+                if (isGranted) {
+                    output++
+                }
+            }
+        }
+        return output
     }
 
     private fun initializePermission(permissionStatus: Boolean, launcher: ManagedActivityResultLauncher<Array<String>, Map<String, @JvmSuppressWildcards Boolean>>) {
